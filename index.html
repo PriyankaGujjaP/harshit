@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gauss Divergence Theorem — 30 Minute Crash Course</title>
+<title>Vector Calculus & Transform Crash Course — 7 Theorems</title>
 <style>
   :root{
     --bg:#f6f7fc; --card:#ffffff; --card2:#eef1fb;
@@ -107,18 +107,46 @@
 
   .footer-note{text-align:center; color:var(--muted); font-size:0.8rem; margin-top:30px;}
   strong.hl{color:var(--good);}
+
+  .tabbar{
+    display:flex; flex-wrap:wrap; gap:6px; justify-content:center;
+    max-width:820px; margin:14px auto 0; padding:0 10px;
+  }
+  .tabbar button{
+    background:var(--card2); border:1px solid var(--border); color:var(--text);
+    padding:7px 12px; border-radius:20px; font-size:0.76rem; cursor:pointer;
+    font-weight:600; white-space:nowrap;
+  }
+  .tabbar button:hover{border-color:var(--accent);}
+  .tabbar button.active{background:var(--accent); color:#fff; border-color:var(--accent);}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+  .topic-heading{text-align:center; margin:18px 0 4px;}
+  .topic-heading h2{margin:0; font-size:1.3rem;}
+  .topic-heading p{margin:4px 0 0; color:var(--muted); font-size:0.85rem;}
 </style>
 </head>
 <body>
 
 <header>
-  <h1>Gauss's Divergence Theorem</h1>
-  <p>Your 30-minute pre-exam run-through — click through each step in order</p>
-  <div class="progress-track" id="progressTrack"></div>
-  <div class="progress-label" id="progressLabel">0 / 6 sections done · click a step below, then tap the dot when you've got it</div>
+  <h1>Vector Calculus &amp; Transform Crash Course</h1>
+  <p>7 theorems, explained twice (exam version + like-you're-5) with verified worked examples. Tap a tab.</p>
+  <div class="tabbar" id="tabbar">
+    <button class="active" onclick="showTab('tab-gauss', this)">Gauss Divergence</button>
+    <button onclick="showTab('tab-green', this)">Green's</button>
+    <button onclick="showTab('tab-stokes', this)">Stokes'</button>
+    <button onclick="showTab('tab-gdc', this)">Grad / Div / Curl</button>
+    <button onclick="showTab('tab-surface', this)">Surface Integral</button>
+    <button onclick="showTab('tab-volume', this)">Volume Integral</button>
+    <button onclick="showTab('tab-laplace', this)">Laplace Convolution</button>
+  </div>
 </header>
 
 <main>
+
+<div class="tab-panel active" id="tab-gauss">
+  <div class="progress-track" id="progressTrack"></div>
+  <div class="progress-label" id="progressLabel">0 / 6 sections done · click a step below, then tap the dot when you've got it</div>
 
   <!-- STEP 1 -->
   <section class="step" id="step1" data-idx="0">
@@ -380,11 +408,557 @@
       <li>End every problem with the sentence: "∴ LHS = RHS ⇒ Gauss's divergence theorem is verified."</li>
     </ul>
   </section>
+</div>
+<!-- ============ END TAB: GAUSS ============ -->
 
-  <p class="footer-note">Built from your own notes — cube, sphere &amp; cylinder examples included. Good luck! 🍀</p>
+<!-- ============ TAB: GREEN'S THEOREM ============ -->
+<div class="tab-panel" id="tab-green">
+  <div class="topic-heading">
+    <h2>Green's Theorem</h2>
+    <p>The 2D cousin of Gauss/Stokes — swaps a walk around a flat region's edge for what's swirling inside it.</p>
+  </div>
+
+  <section class="step">
+    <h2>The Big Idea</h2>
+    <div class="split">
+      <div class="box">
+        <h3>As it actually is (exam version)</h3>
+        <p>If S is a closed region in the xy-plane bounded by a simple closed curve C, and M, N are continuous functions of x, y with continuous partial derivatives in R, then:</p>
+        <p>Green's theorem turns a <strong>line integral around the boundary C</strong> into a <strong>double integral over the flat region S</strong> it encloses.</p>
+      </div>
+      <div class="box eli5">
+        <h3>Like you're 5</h3>
+        <p>Picture a <strong>flat garden with a fence around it</strong>. Green's theorem says: instead of walking all the way around the fence checking the wind pushing you forward or back, you can just add up all the little "swirls" of wind happening everywhere inside the garden.</p>
+        <p>Walking the fence and counting swirls inside both give the exact same number.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <h2>The Formula</h2>
+    <div class="formula">
+      ∮<sub>C</sub> (M dx + N dy) &nbsp;=&nbsp; ∬<sub>S</sub> ( ∂N/∂x − ∂M/∂y ) dx dy
+    </div>
+    <p style="color:var(--muted); font-size:0.9rem;">C must be traversed <strong>counter-clockwise</strong> (the positive direction) for this sign convention. M and N are just the x-part and y-part of what you're integrating along the curve.</p>
+  </section>
+
+  <section class="step">
+    <h2>Full Worked Example</h2>
+    <p>Verify Green's theorem for ∮(3x² − 8y²)dx + (4y − 6xy)dy, where C is the closed curve bounding the region between y = √x and y = x².</p>
+    <div class="box eli5" style="margin-bottom:14px;">
+      <h3>Like you're 5</h3>
+      <p>Imagine a curvy leaf-shaped garden bed, pinched between two curved fence lines that cross at (0,0) and (1,1). "Swirl-counting" inside the leaf should match "fence-walking" around its edge — that's all we're checking.</p>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 1 · RHS — find ∂N/∂x − ∂M/∂y</div>
+      <div class="body">M = 3x²−8y², N = 4y−6xy. ∂M/∂y = −16y, ∂N/∂x = −6y. So ∂N/∂x − ∂M/∂y = −6y −(−16y) = <strong class="hl">10y</strong>.</div>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 2 · RHS — double integral over the leaf region</div>
+      <div class="body">Curves meet at (0,0) and (1,1), region is x²≤y≤√x, 0≤x≤1.<br>
+      ∫₀¹∫<sub>x²</sub><sup>√x</sup> 10y dy dx = 5∫₀¹(x − x⁴)dx = 5[x²/2 − x⁵/5]₀¹ = 5(3/10) = <strong class="hl">3/2</strong>.</div>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 3 · LHS — line integral along OA (y = x²)</div>
+      <div class="body">dy = 2x dx. ∫₀¹(3x²−8x⁴)dx + (4x²−6x³)(2x)dx = ∫₀¹(3x²+8x³−20x⁴)dx = [x³+2x⁴−4x⁵]₀¹ = <strong class="hl">−1</strong>.</div>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 4 · LHS — line integral along AO (x = y²)</div>
+      <div class="body">dx = 2y dy, y goes 1→0. Working out ∫(3y⁴−8y²)(2y)dy + (4y−6y³)dy = <strong class="hl">5/2</strong>.</div>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 5 · Add and conclude</div>
+      <div class="body">LHS = −1 + 5/2 = 3/2 = RHS ⇒ <strong class="hl">Green's theorem is verified.</strong></div>
+    </div>
+  </section>
+
+  <section class="step">
+    <h2>🎯 Quick Check</h2>
+    <div class="quiz-q">
+      <p class="q">1. Green's theorem converts a line integral around C into:</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,false)">A volume integral over a solid</button>
+        <button onclick="answer(this,true)">A double integral over the flat region S enclosed by C</button>
+        <button onclick="answer(this,false)">Another line integral</button>
+      </div>
+    </div>
+    <div class="quiz-q">
+      <p class="q">2. In ∮(Mdx+Ndy) = ∬(∂N/∂x − ∂M/∂y)dxdy, C must be traversed:</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,true)">Counter-clockwise (positive direction)</button>
+        <button onclick="answer(this,false)">Clockwise</button>
+        <button onclick="answer(this,false)">Direction doesn't matter</button>
+      </div>
+    </div>
+    <div class="quiz-q">
+      <p class="q">3. Green's theorem is really just a 2D special case of:</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,false)">The Laplace transform</button>
+        <button onclick="answer(this,true)">Stokes' theorem (with the surface flattened onto the xy-plane)</button>
+        <button onclick="answer(this,false)">The gradient theorem</button>
+      </div>
+    </div>
+  </section>
+</div>
+<!-- ============ END TAB: GREEN'S ============ -->
+
+<!-- ============ TAB: STOKES' THEOREM ============ -->
+<div class="tab-panel" id="tab-stokes">
+  <div class="topic-heading">
+    <h2>Stokes' Theorem</h2>
+    <p>The 3D upgrade of Green's — swaps a walk around a curved surface's rim for the spin happening across it.</p>
+  </div>
+
+  <section class="step">
+    <h2>The Big Idea</h2>
+    <div class="split">
+      <div class="box">
+        <h3>As it actually is (exam version)</h3>
+        <p>Let S be an open surface bounded by a closed, non-intersecting curve C. If F̄ is a differentiable vector point function, then:</p>
+        <p>C is traversed in the positive direction and n̂ is the unit outward normal at any point of S. Setting the surface flat onto the xy-plane (n̂ = k̂) actually <em>reduces Stokes' theorem to Green's theorem</em> — they're the same idea, one dimension apart.</p>
+      </div>
+      <div class="box eli5">
+        <h3>Like you're 5</h3>
+        <p>Picture a <strong>trampoline stretched over a bent wire rim</strong> (the rim can be curvy, not just flat). Walk around the rim and feel how much it's twisting you forward — or, count up all the tiny spins happening across the whole trampoline surface. Same number either way.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <h2>The Formula</h2>
+    <div class="formula">
+      ∮<sub>C</sub> F̄ · dr̄ &nbsp;=&nbsp; ∬<sub>S</sub> (curl F̄) · n̂ dS
+    </div>
+    <p style="color:var(--muted); font-size:0.9rem;">curl F̄ = ∇×F̄ measures the "spin" of the field at each point of S; you're adding all those tiny spins up and comparing to the total twist felt walking the rim C.</p>
+  </section>
+
+  <section class="step">
+    <h2>Full Worked Example</h2>
+    <p>Verify Stokes' theorem for F̄ = −y³ î + x³ ĵ, where S is the circular disc x²+y² ≤ 1, z = 0.</p>
+    <div class="box eli5" style="margin-bottom:14px;">
+      <h3>Like you're 5</h3>
+      <p>The trampoline here is just a flat circle. Walking around its rim (the unit circle) should feel like the exact same amount of "twist" as adding up the spin everywhere across the flat trampoline surface.</p>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 1 · LHS — set up the rim walk</div>
+      <div class="body">C: x=cosθ, y=sinθ, 0→2π. F·dr = −y³dx + x³dy = sin⁴θ dθ + cos⁴θ dθ (after substitution).</div>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 2 · LHS — evaluate the integral</div>
+      <div class="body">∫₀<sup>2π</sup>(sin⁴θ+cos⁴θ)dθ = ∫₀<sup>2π</sup>(1 − 2sin²θcos²θ)dθ = 2π − ½∫₀<sup>2π</sup>sin²2θ dθ = 2π − π/2 = <strong class="hl">3π/2</strong>.</div>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 3 · RHS — find curl F̄</div>
+      <div class="body">F = −y³î + x³ĵ + 0k̂. curl F̄ = ∇×F̄ = (3x²+3y²)k̂ = <strong class="hl">3(x²+y²) k̂</strong>.</div>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 4 · RHS — integrate over the disc (polar coordinates)</div>
+      <div class="body">n̂ = k̂, so ∬3(x²+y²) dS = 3∫₀<sup>2π</sup>∫₀¹ r²·r dr dθ = 3·2π·[r⁴/4]₀¹ = <strong class="hl">3π/2</strong>.</div>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 5 · Conclude</div>
+      <div class="body">LHS = RHS = 3π/2 ⇒ <strong class="hl">Stokes' theorem is verified.</strong></div>
+    </div>
+  </section>
+
+  <section class="step">
+    <h2>🎯 Quick Check</h2>
+    <div class="quiz-q">
+      <p class="q">1. Stokes' theorem relates a line integral around C to:</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,false)">A triple integral over a volume</button>
+        <button onclick="answer(this,true)">A surface integral of curl F̄ over any surface S bounded by C</button>
+        <button onclick="answer(this,false)">A single number, always zero</button>
+      </div>
+    </div>
+    <div class="quiz-q">
+      <p class="q">2. If the surface S is flattened onto the xy-plane, Stokes' theorem becomes:</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,true)">Green's theorem</button>
+        <button onclick="answer(this,false)">Gauss's divergence theorem</button>
+        <button onclick="answer(this,false)">The Laplace transform</button>
+      </div>
+    </div>
+    <div class="quiz-q">
+      <p class="q">3. curl F̄ measures:</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,false)">Outflow / source strength at a point</button>
+        <button onclick="answer(this,true)">Rotation / spin of the field at a point</button>
+        <button onclick="answer(this,false)">The steepest uphill direction</button>
+      </div>
+    </div>
+  </section>
+</div>
+<!-- ============ END TAB: STOKES' ============ -->
+
+<!-- ============ TAB: GRADIENT / DIVERGENCE / CURL ============ -->
+<div class="tab-panel" id="tab-gdc">
+  <div class="topic-heading">
+    <h2>Gradient, Divergence &amp; Curl</h2>
+    <p>The three basic operations ∇ can do — the toolkit every theorem above is built from.</p>
+  </div>
+
+  <section class="step">
+    <h2>The Big Idea — three tools, one operator ∇</h2>
+    <p style="text-align:center;">∇ = î ∂/∂x + ĵ ∂/∂y + k̂ ∂/∂z &nbsp;(the "del" operator)</p>
+    <div class="split">
+      <div class="box">
+        <h3>Gradient — ∇φ (on a scalar)</h3>
+        <p>grad φ = ∇φ = î ∂φ/∂x + ĵ ∂φ/∂y + k̂ ∂φ/∂z. Output is a <strong>vector</strong>. Directional derivative of φ at a point, along unit vector ê, is ∇φ·ê. The greatest possible rate of increase at a point is |∇φ|.</p>
+      </div>
+      <div class="box eli5">
+        <h3>Like you're 5</h3>
+        <p>If φ is the height of a hill, ∇φ is an arrow at your feet that always points <strong>straight uphill</strong> — and how long the arrow is tells you how steep that hill is right there.</p>
+      </div>
+    </div>
+    <div class="split" style="margin-top:14px;">
+      <div class="box">
+        <h3>Divergence — ∇·F̄ (on a vector)</h3>
+        <p>div F̄ = ∇·F̄ = ∂f₁/∂x + ∂f₂/∂y + ∂f₃/∂z. Output is a <strong>scalar</strong>. F̄ is called <em>solenoidal</em> if div F̄ = 0 everywhere.</p>
+      </div>
+      <div class="box eli5">
+        <h3>Like you're 5</h3>
+        <p>Stand at one spot in a windy field. Divergence tells you if air is being <strong>born</strong> right there (a tiny spring, positive) or <strong>disappearing</strong> (a tiny drain, negative).</p>
+      </div>
+    </div>
+    <div class="split" style="margin-top:14px;">
+      <div class="box">
+        <h3>Curl — ∇×F̄ (on a vector)</h3>
+        <p>curl F̄ = ∇×F̄, computed as a determinant. Output is a <strong>vector</strong>. F̄ is called <em>irrotational</em> if curl F̄ = 0 — and then F̄ = ∇φ for some scalar potential φ.</p>
+      </div>
+      <div class="box eli5">
+        <h3>Like you're 5</h3>
+        <p>Drop a tiny toy pinwheel at that spot. Curl tells you <strong>whether it spins</strong>, how fast, and which way its axle points.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <h2>Three Mini Worked Examples</h2>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Gradient · directional derivative</div>
+      <div class="body">
+        φ = x²−y²+2z² at P(1,2,3), direction 4î−2ĵ+k̂.<br>
+        ∇φ = 2xî−2yĵ+4zk̂ → at P: 2î−4ĵ+12k̂.<br>
+        ê = (4î−2ĵ+k̂)/√21.<br>
+        Directional derivative = ∇φ·ê = (8+8+12)/√21 = <strong class="hl">28/√21</strong>.
+      </div>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Divergence · find div f̄ at a point</div>
+      <div class="body">
+        f̄ = xy²î + 2x²yzĵ − 3yz²k̂, find div f̄ at (1,−1,1).<br>
+        div f̄ = y² + 2x²z − 6yz.<br>
+        At (1,−1,1): 1 + 2(1)(1) − 6(−1)(1) = 1+2+6 = <strong class="hl">9</strong>.
+      </div>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Curl · show F̄ is irrotational, find its scalar potential</div>
+      <div class="body">
+        F̄ = (x²−yz)î + (y²−zx)ĵ + (z²−xy)k̂.<br>
+        curl F̄ = i(−x+x) − j(−y+y) − k(−z+z) = <strong class="hl">0</strong> ⇒ F̄ is irrotational.<br>
+        Since F̄ = ∇φ, integrating each component gives <strong class="hl">φ = x³/3 + y³/3 + z³/3 − xyz + C</strong>.
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <h2>🎯 Quick Check</h2>
+    <div class="quiz-q">
+      <p class="q">1. Which of the three operations gives back a vector, not a scalar?</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,false)">Only divergence</button>
+        <button onclick="answer(this,true)">Gradient and curl</button>
+        <button onclick="answer(this,false)">None of them</button>
+      </div>
+    </div>
+    <div class="quiz-q">
+      <p class="q">2. A vector field with div F̄ = 0 everywhere is called:</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,true)">Solenoidal</button>
+        <button onclick="answer(this,false)">Irrotational</button>
+        <button onclick="answer(this,false)">Conservative</button>
+      </div>
+    </div>
+    <div class="quiz-q">
+      <p class="q">3. If curl F̄ = 0, then F̄ can always be written as:</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,false)">div of some scalar</button>
+        <button onclick="answer(this,true)">∇φ, the gradient of some scalar potential φ</button>
+        <button onclick="answer(this,false)">curl of some other vector</button>
+      </div>
+    </div>
+  </section>
+</div>
+<!-- ============ END TAB: GRAD/DIV/CURL ============ -->
+
+<!-- ============ TAB: SURFACE INTEGRAL ============ -->
+<div class="tab-panel" id="tab-surface">
+  <div class="topic-heading">
+    <h2>Surface Integrals</h2>
+    <p>The technique hiding inside every LHS you computed in Gauss's and Stokes' examples.</p>
+  </div>
+
+  <section class="step">
+    <h2>The Big Idea</h2>
+    <div class="split">
+      <div class="box">
+        <h3>As it actually is (exam version)</h3>
+        <p>A surface integral ∬<sub>S</sub> F̄·n̂ dS adds up F̄·n̂ (the part of F̄ poking through the surface) across every point of a curved or flat surface S.</p>
+        <p>Since S is usually curved, you can't integrate over it directly — you <strong>project it onto a flat coordinate plane</strong> and integrate there instead.</p>
+      </div>
+      <div class="box eli5">
+        <h3>Like you're 5</h3>
+        <p>Imagine painting a curved umbrella. Instead of measuring paint on the curved fabric directly, you shine a flashlight straight down and measure the <strong>flat shadow</strong> it casts on the floor — much easier to work with, and the math fixes up the tilt for you.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <h2>The Formula</h2>
+    <div class="formula">
+      ∬<sub>S</sub> F̄ · n̂ dS &nbsp;=&nbsp; ∬<sub>R</sub> ( F̄ · n̂ ) / |n̂ · k̂| &nbsp;dx dy
+    </div>
+    <p style="color:var(--muted); font-size:0.9rem;">R is the "shadow" (projection) of S onto the xy-plane. If n̂·k̂ = 0 anywhere on S (the surface is edge-on to that plane), project onto a different coordinate plane instead — use whichever plane the surface doesn't stand perpendicular to.</p>
+  </section>
+
+  <section class="step">
+    <h2>Full Worked Example</h2>
+    <p>Evaluate ∬<sub>S</sub> 3(x²+y²) k̂ · n̂ dS, where S is the flat disc x²+y² ≤ 1 in the plane z = 0. (This is exactly the RHS piece from the Stokes' worked example.)</p>
+    <div class="box eli5" style="margin-bottom:14px;">
+      <h3>Like you're 5</h3>
+      <p>The umbrella here is already flat, lying right on the floor — so the "shadow" is just the disc itself, no tilting correction needed.</p>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 1 · Set n̂ and simplify</div>
+      <div class="body">Surface is flat in the xy-plane, so n̂ = k̂ and n̂·k̂ = 1 (no correction factor needed). The integral becomes ∬<sub>R</sub> 3(x²+y²) dx dy over the unit disc R.</div>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 2 · Switch to polar coordinates</div>
+      <div class="body">x²+y² = r², dx dy = r dr dθ, r: 0→1, θ: 0→2π.</div>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 3 · Integrate</div>
+      <div class="body">3∫₀<sup>2π</sup>∫₀¹ r²·r dr dθ = 3·2π·[r⁴/4]₀¹ = 3·2π·(1/4) = <strong class="hl">3π/2</strong>.</div>
+    </div>
+  </section>
+
+  <section class="step">
+    <h2>🎯 Quick Check</h2>
+    <div class="quiz-q">
+      <p class="q">1. Why do we project a surface onto a coordinate plane before integrating?</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,false)">It changes the answer to something simpler</button>
+        <button onclick="answer(this,true)">Because a flat 2D region is much easier to set integration limits over than a curved surface</button>
+        <button onclick="answer(this,false)">It's only a rough approximation</button>
+      </div>
+    </div>
+    <div class="quiz-q">
+      <p class="q">2. In ∬(F̄·n̂)/|n̂·k̂| dxdy, what does dividing by |n̂·k̂| do?</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,true)">Corrects for the surface being tilted relative to the projection plane</button>
+        <button onclick="answer(this,false)">Converts from vector to scalar units</button>
+        <button onclick="answer(this,false)">Nothing, it's just there by convention</button>
+      </div>
+    </div>
+    <div class="quiz-q">
+      <p class="q">3. If a surface is vertical (perpendicular to the xy-plane), what should you do?</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,true)">Project onto a different coordinate plane (e.g. yz or xz) instead</button>
+        <button onclick="answer(this,false)">The integral is always zero</button>
+        <button onclick="answer(this,false)">Nothing changes, keep projecting onto xy</button>
+      </div>
+    </div>
+  </section>
+</div>
+<!-- ============ END TAB: SURFACE INTEGRAL ============ -->
+
+<!-- ============ TAB: VOLUME INTEGRAL ============ -->
+<div class="tab-panel" id="tab-volume">
+  <div class="topic-heading">
+    <h2>Volume Integrals</h2>
+    <p>Adding a scalar or vector function up across a solid region — pick the coordinate system that matches its shape.</p>
+  </div>
+
+  <section class="step">
+    <h2>The Big Idea</h2>
+    <div class="split">
+      <div class="box">
+        <h3>As it actually is (exam version)</h3>
+        <p>A volume integral ∭<sub>V</sub> f dV sums f throughout every tiny piece of a 3D solid V. The trick is choosing dV to match the solid's shape.</p>
+      </div>
+      <div class="box eli5">
+        <h3>Like you're 5</h3>
+        <p>It's like weighing a box of sand grain by grain. If the box is a cube, you scoop in straight rows. If it's a can, you scoop in rings. If it's a ball, you scoop in onion-like shells. Same total sand, easier scooping.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <h2>The Formula (pick your coordinates)</h2>
+    <div class="box">
+      <table>
+        <tr><th>Shape</th><th>Coordinate system</th><th>dV</th></tr>
+        <tr><td>Box / cube</td><td>Cartesian (x,y,z)</td><td>dx dy dz</td></tr>
+        <tr><td>Cylinder</td><td>Cylindrical (r,θ,z)</td><td>r dr dθ dz</td></tr>
+        <tr><td>Ball / sphere</td><td>Spherical (r,θ,φ)</td><td>r² sinθ dr dθ dφ</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section class="step">
+    <h2>Full Worked Example</h2>
+    <p>Evaluate ∭<sub>V</sub> 4z dV, where V is the upper half of the ball x²+y²+z² ≤ a² (the solid sitting on the xy-plane, capped by the upper hemisphere). This is the exact volume integral that comes out of applying Gauss's theorem to F̄ = yz²î + zx²ĵ + 2z²k̂.</p>
+    <div class="box eli5" style="margin-bottom:14px;">
+      <h3>Like you're 5</h3>
+      <p>It's a snow-dome shape — a half-ball sitting flat-side-down. We scoop sand out in onion-shell layers (spherical coordinates) since that matches the round shape perfectly, and only go halfway up (θ stops at 90°) since it's a half-ball, not a whole one.</p>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 1 · Switch to spherical coordinates</div>
+      <div class="body">x = r sinθ cosφ, y = r sinθ sinφ, z = r cosθ, dV = r² sinθ dr dθ dφ. Since it's the <em>upper</em> half-ball only: r: 0→a, θ: 0→π/2 (not π — that would be the full ball), φ: 0→2π.</div>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 2 · Substitute z = r cosθ</div>
+      <div class="body">∭4z dV = 4∫₀<sup>a</sup>∫₀<sup>π/2</sup>∫₀<sup>2π</sup> (r cosθ)(r² sinθ) dφ dθ dr = 4∫₀<sup>a</sup>r³dr · ∫₀<sup>π/2</sup>sinθcosθ dθ · ∫₀<sup>2π</sup>dφ.</div>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 3 · Evaluate each piece</div>
+      <div class="body">∫₀<sup>a</sup>r³dr = a⁴/4. &nbsp; ∫₀<sup>π/2</sup>sinθcosθ dθ = [sin²θ/2]₀<sup>π/2</sup> = 1/2. &nbsp; ∫₀<sup>2π</sup>dφ = 2π.</div>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 4 · Multiply it all together</div>
+      <div class="body">4 · (a⁴/4) · (1/2) · 2π = <strong class="hl">π a⁴</strong>.</div>
+    </div>
+  </section>
+
+  <section class="step">
+    <h2>🎯 Quick Check</h2>
+    <div class="quiz-q">
+      <p class="q">1. Which dV would you use for a solid shaped like a soup can?</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,false)">dx dy dz</button>
+        <button onclick="answer(this,true)">r dr dθ dz (cylindrical)</button>
+        <button onclick="answer(this,false)">r² sinθ dr dθ dφ (spherical)</button>
+      </div>
+    </div>
+    <div class="quiz-q">
+      <p class="q">2. For a half-ball (upper hemisphere solid) in spherical coordinates, θ should run:</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,true)">0 to π/2</button>
+        <button onclick="answer(this,false)">0 to π</button>
+        <button onclick="answer(this,false)">0 to 2π</button>
+      </div>
+    </div>
+    <div class="quiz-q">
+      <p class="q">3. The whole point of switching coordinate systems for a volume integral is:</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,true)">To match the region's natural shape so the integration limits become constants, not messy functions</button>
+        <button onclick="answer(this,false)">To change the actual value of the integral</button>
+        <button onclick="answer(this,false)">It's required by definition — Cartesian is never allowed for curved solids</button>
+      </div>
+    </div>
+  </section>
+</div>
+<!-- ============ END TAB: VOLUME INTEGRAL ============ -->
+
+<!-- ============ TAB: LAPLACE / CONVOLUTION ============ -->
+<div class="tab-panel" id="tab-laplace">
+  <div class="topic-heading">
+    <h2>Laplace Convolution Theorem</h2>
+    <p>Turns a messy "mixing" of two functions into simple multiplication.</p>
+  </div>
+
+  <section class="step">
+    <h2>The Big Idea</h2>
+    <div class="split">
+      <div class="box">
+        <h3>As it actually is (exam version)</h3>
+        <p>The convolution of f(t) and g(t) is (f*g)(t) = ∫₀ᵗ f(τ) g(t−τ) dτ — a way of "blending" two functions together, common in systems/signals problems.</p>
+        <p>The Convolution Theorem says: taking the Laplace transform of that blend is the <strong>same as just multiplying</strong> their individual transforms.</p>
+      </div>
+      <div class="box eli5">
+        <h3>Like you're 5</h3>
+        <p>Mixing two paint colors together and then taking a photo of the mix is <strong>hard to describe with words</strong>. But if you photograph each paint can separately first (transform them), then mixing becomes as easy as multiplying two numbers.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <h2>The Formula</h2>
+    <div class="formula">
+      L{ (f*g)(t) } &nbsp;=&nbsp; F(s) · G(s)
+      <span class="small">where F(s) = L{f(t)}, G(s) = L{g(t)}, and (f*g)(t) = ∫₀ᵗ f(τ)g(t−τ)dτ</span>
+    </div>
+    <p style="color:var(--muted); font-size:0.9rem;">Read backwards, this is the most useful direction on exams: L⁻¹{F(s)G(s)} = (f*g)(t) — it lets you invert a <em>product</em> of two known transforms without partial fractions.</p>
+  </section>
+
+  <section class="step">
+    <h2>Full Worked Example</h2>
+    <p>Find L⁻¹{ 1 / [(s−a)(s−b)] } using the convolution theorem (a ≠ b).</p>
+    <div class="box eli5" style="margin-bottom:14px;">
+      <h3>Like you're 5</h3>
+      <p>1/(s−a) is the "photo" of e<sup>at</sup>, and 1/(s−b) is the "photo" of e<sup>bt</sup>. Since we're given the two photos already multiplied together, we just need to "unmix the paint" — blend e<sup>at</sup> and e<sup>bt</sup> back together using the recipe.</p>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 1 · Identify f(t) and g(t)</div>
+      <div class="body">F(s) = 1/(s−a) → f(t) = e<sup>at</sup>. &nbsp; G(s) = 1/(s−b) → g(t) = e<sup>bt</sup>.</div>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 2 · Set up the convolution integral</div>
+      <div class="body">(f*g)(t) = ∫₀ᵗ e<sup>aτ</sup> e<sup>b(t−τ)</sup> dτ = e<sup>bt</sup> ∫₀ᵗ e<sup>(a−b)τ</sup> dτ.</div>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 3 · Integrate</div>
+      <div class="body">e<sup>bt</sup> · [ e<sup>(a−b)τ</sup>/(a−b) ]₀ᵗ = e<sup>bt</sup> · [e<sup>(a−b)t</sup> − 1]/(a−b) = [e<sup>at</sup> − e<sup>bt</sup>]/(a−b).</div>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 4 · Conclusion</div>
+      <div class="body">L⁻¹{ 1/[(s−a)(s−b)] } = <strong class="hl">(e<sup>at</sup> − e<sup>bt</sup>) / (a−b)</strong>.</div>
+    </div>
+  </section>
+
+  <section class="step">
+    <h2>🎯 Quick Check</h2>
+    <div class="quiz-q">
+      <p class="q">1. The Convolution Theorem says L{(f*g)(t)} equals:</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,false)">F(s) + G(s)</button>
+        <button onclick="answer(this,true)">F(s) · G(s)</button>
+        <button onclick="answer(this,false)">F(s) / G(s)</button>
+      </div>
+    </div>
+    <div class="quiz-q">
+      <p class="q">2. (f*g)(t) = ∫₀ᵗ f(τ)g(t−τ)dτ is called the:</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,false)">Derivative of f and g</button>
+        <button onclick="answer(this,true)">Convolution of f and g</button>
+        <button onclick="answer(this,false)">Inverse transform of f and g</button>
+      </div>
+    </div>
+    <div class="quiz-q">
+      <p class="q">3. The convolution theorem is most useful on exams for:</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,true)">Finding L⁻¹ of a product of two transforms, without partial fractions</button>
+        <button onclick="answer(this,false)">Solving algebra equations</button>
+        <button onclick="answer(this,false)">Computing surface areas</button>
+      </div>
+    </div>
+  </section>
+</div>
+<!-- ============ END TAB: LAPLACE ============ -->
+
+  <p class="footer-note">Built from your own notes — Gauss, Green's, Stokes', Gradient/Divergence/Curl, plus Surface, Volume &amp; Laplace Convolution. Good luck! 🍀</p>
 </main>
 
 <script>
+  function showTab(id, btn){
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('#tabbar button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
   const total = 6;
   const track = document.getElementById('progressTrack');
   const done = new Array(total).fill(false);
