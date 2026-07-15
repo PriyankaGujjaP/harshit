@@ -439,7 +439,16 @@
     <div class="formula">
       ∮<sub>C</sub> (M dx + N dy) &nbsp;=&nbsp; ∬<sub>S</sub> ( ∂N/∂x − ∂M/∂y ) dx dy
     </div>
-    <p style="color:var(--muted); font-size:0.9rem;">C must be traversed <strong>counter-clockwise</strong> (the positive direction) for this sign convention. M and N are just the x-part and y-part of what you're integrating along the curve.</p>
+    <div class="split">
+      <div class="box">
+        <p>C must be traversed <strong>counter-clockwise</strong> (the positive direction) for this sign convention. M and N are just the x-part and y-part of what you're integrating along the curve.</p>
+      </div>
+      <div class="box eli5">
+        <h3>Like you're 5</h3>
+        <p>∮ means "walk all the way around the fence and add up the push you feel at every step." ∬ means "stand inside the garden and add up every tiny swirl happening there instead."</p>
+        <p>Walking counter-clockwise just means keeping the garden on your left the whole way round — that's the rule that makes both sides match.</p>
+      </div>
+    </div>
   </section>
 
   <section class="step">
@@ -529,7 +538,16 @@
     <div class="formula">
       ∮<sub>C</sub> F̄ · dr̄ &nbsp;=&nbsp; ∬<sub>S</sub> (curl F̄) · n̂ dS
     </div>
-    <p style="color:var(--muted); font-size:0.9rem;">curl F̄ = ∇×F̄ measures the "spin" of the field at each point of S; you're adding all those tiny spins up and comparing to the total twist felt walking the rim C.</p>
+    <div class="split">
+      <div class="box">
+        <p>curl F̄ = ∇×F̄ measures the "spin" of the field at each point of S; you're adding all those tiny spins up and comparing to the total twist felt walking the rim C.</p>
+      </div>
+      <div class="box eli5">
+        <h3>Like you're 5</h3>
+        <p>∮F̄·dr̄ is "walk the wire rim and feel how much it twists you as you go." ∬(curl F̄)·n̂ dS is "scatter a thousand tiny pinwheels across the trampoline and add up how fast each one spins."</p>
+        <p>curl F̄ is just the "spin-detector" — plug in a point, it tells you which way a pinwheel there would turn.</p>
+      </div>
+    </div>
   </section>
 
   <section class="step">
@@ -635,6 +653,11 @@
 
   <section class="step">
     <h2>Three Mini Worked Examples</h2>
+
+    <div class="box eli5" style="margin-bottom:10px;">
+      <h3>Like you're 5 — gradient example</h3>
+      <p>You're standing on a bumpy hill at one exact spot, facing one exact direction. "Directional derivative" just answers: <strong>if I take one step that way, do I go up or down, and how steeply?</strong> That's it — the scary formula is just a shortcut for that one question.</p>
+    </div>
     <div class="example-step" onclick="toggleStep(this)">
       <div class="head">Gradient · directional derivative</div>
       <div class="body">
@@ -644,6 +667,11 @@
         Directional derivative = ∇φ·ê = (8+8+12)/√21 = <strong class="hl">28/√21</strong>.
       </div>
     </div>
+
+    <div class="box eli5" style="margin:14px 0 10px;">
+      <h3>Like you're 5 — divergence example</h3>
+      <p>You're standing at one exact spot (1,−1,1) in a windy field made by this formula. Divergence just asks: <strong>right here, is wind being born (a mini fountain) or sucked away (a mini drain)?</strong> A positive answer (9) means it's a little fountain at that spot.</p>
+    </div>
     <div class="example-step" onclick="toggleStep(this)">
       <div class="head">Divergence · find div f̄ at a point</div>
       <div class="body">
@@ -651,6 +679,11 @@
         div f̄ = y² + 2x²z − 6yz.<br>
         At (1,−1,1): 1 + 2(1)(1) − 6(−1)(1) = 1+2+6 = <strong class="hl">9</strong>.
       </div>
+    </div>
+
+    <div class="box eli5" style="margin:14px 0 10px;">
+      <h3>Like you're 5 — curl example</h3>
+      <p>We drop a tiny pinwheel everywhere in this field and check: does it ever spin? We do the math and get <strong>0 everywhere</strong> — meaning it never spins, anywhere. When a field never spins, it's secretly hiding a simple "hill height" map underneath it (the scalar potential φ) — like the whole windy field was really just "which way is uphill" in disguise.</p>
     </div>
     <div class="example-step" onclick="toggleStep(this)">
       <div class="head">Curl · show F̄ is irrotational, find its scalar potential</div>
@@ -719,7 +752,16 @@
     <div class="formula">
       ∬<sub>S</sub> F̄ · n̂ dS &nbsp;=&nbsp; ∬<sub>R</sub> ( F̄ · n̂ ) / |n̂ · k̂| &nbsp;dx dy
     </div>
-    <p style="color:var(--muted); font-size:0.9rem;">R is the "shadow" (projection) of S onto the xy-plane. If n̂·k̂ = 0 anywhere on S (the surface is edge-on to that plane), project onto a different coordinate plane instead — use whichever plane the surface doesn't stand perpendicular to.</p>
+    <div class="split">
+      <div class="box">
+        <p>R is the "shadow" (projection) of S onto the xy-plane. If n̂·k̂ = 0 anywhere on S (the surface is edge-on to that plane), project onto a different coordinate plane instead — use whichever plane the surface doesn't stand perpendicular to.</p>
+      </div>
+      <div class="box eli5">
+        <h3>Like you're 5</h3>
+        <p>R is just the flat shadow on the floor. Dividing by |n̂·k̂| is the math's way of "un-tilting" the umbrella — if the umbrella is angled instead of flat, its shadow looks smaller than the real fabric, so we stretch the shadow back out to the true size before measuring.</p>
+        <p>If the umbrella is standing straight up on its edge, its shadow disappears completely (that's n̂·k̂ = 0) — so we shine the flashlight from a different direction instead.</p>
+      </div>
+    </div>
   </section>
 
   <section class="step">
@@ -796,13 +838,21 @@
 
   <section class="step">
     <h2>The Formula (pick your coordinates)</h2>
-    <div class="box">
-      <table>
-        <tr><th>Shape</th><th>Coordinate system</th><th>dV</th></tr>
-        <tr><td>Box / cube</td><td>Cartesian (x,y,z)</td><td>dx dy dz</td></tr>
-        <tr><td>Cylinder</td><td>Cylindrical (r,θ,z)</td><td>r dr dθ dz</td></tr>
-        <tr><td>Ball / sphere</td><td>Spherical (r,θ,φ)</td><td>r² sinθ dr dθ dφ</td></tr>
-      </table>
+    <div class="split">
+      <div class="box">
+        <table>
+          <tr><th>Shape</th><th>Coordinate system</th><th>dV</th></tr>
+          <tr><td>Box / cube</td><td>Cartesian (x,y,z)</td><td>dx dy dz</td></tr>
+          <tr><td>Cylinder</td><td>Cylindrical (r,θ,z)</td><td>r dr dθ dz</td></tr>
+          <tr><td>Ball / sphere</td><td>Spherical (r,θ,φ)</td><td>r² sinθ dr dθ dφ</td></tr>
+        </table>
+      </div>
+      <div class="box eli5">
+        <h3>Like you're 5</h3>
+        <p><strong>Cartesian</strong> = scooping sand in straight little cubes, like Lego bricks — good for boxes.</p>
+        <p><strong>Cylindrical</strong> = scooping in ring-shaped slices, like cutting a can into coins then wedges — good for anything round around one straight axis.</p>
+        <p><strong>Spherical</strong> = scooping in onion-like layers around a center point — good for balls. The extra "r² sinθ" is just the size of each oddly-shaped onion-layer chunk, so the count comes out right.</p>
+      </div>
     </div>
   </section>
 
@@ -889,7 +939,15 @@
       L{ (f*g)(t) } &nbsp;=&nbsp; F(s) · G(s)
       <span class="small">where F(s) = L{f(t)}, G(s) = L{g(t)}, and (f*g)(t) = ∫₀ᵗ f(τ)g(t−τ)dτ</span>
     </div>
-    <p style="color:var(--muted); font-size:0.9rem;">Read backwards, this is the most useful direction on exams: L⁻¹{F(s)G(s)} = (f*g)(t) — it lets you invert a <em>product</em> of two known transforms without partial fractions.</p>
+    <div class="split">
+      <div class="box">
+        <p>Read backwards, this is the most useful direction on exams: L⁻¹{F(s)G(s)} = (f*g)(t) — it lets you invert a <em>product</em> of two known transforms without partial fractions.</p>
+      </div>
+      <div class="box eli5">
+        <h3>Like you're 5</h3>
+        <p>Forwards: "mixing two paints, then photographing the mix" = "photographing each paint, then multiplying the photos." Backwards (the useful direction): if someone hands you <strong>two photos already multiplied together</strong>, you can always unmix them back into the two original paint blends using the recipe — no messy fraction-splitting needed.</p>
+      </div>
+    </div>
   </section>
 
   <section class="step">
