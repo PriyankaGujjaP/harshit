@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gauss Divergence Theorem — 30 Minute Crash Course</title>
+<style>
+  :root{
+    --bg:#f6f7fc; --card:#ffffff; --card2:#eef1fb;
+    --accent:#4c63d2; --accent2:#e0703a; --good:#2f9e64;
+    --text:#252a4a; --muted:#666c94; --border:#dde1f5;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; font-family:'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background:radial-gradient(circle at 20% -10%, #eef1fb 0%, var(--bg) 55%);
+    color:var(--text); line-height:1.55; padding-bottom:60px;
+  }
+  header{
+    padding:28px 20px 18px; text-align:center; position:sticky; top:0;
+    background:rgba(246,247,252,0.92); backdrop-filter:blur(6px); z-index:50;
+    border-bottom:1px solid var(--border);
+  }
+  header h1{margin:0 0 4px; font-size:1.5rem;}
+  header p{margin:0; color:var(--muted); font-size:0.9rem;}
+  .progress-track{
+    display:flex; gap:6px; max-width:640px; margin:14px auto 0; padding:0 10px;
+  }
+  .progress-dot{
+    flex:1; height:8px; border-radius:5px; background:var(--border);
+    cursor:pointer; transition:background .25s;
+  }
+  .progress-dot.done{background:var(--good);}
+  .progress-label{font-size:0.75rem; color:var(--muted); margin-top:6px;}
+
+  main{max-width:760px; margin:0 auto; padding:0 18px;}
+  section.step{
+    background:var(--card); border:1px solid var(--border); border-radius:16px;
+    padding:22px 22px 26px; margin:22px 0; scroll-margin-top:170px;
+  }
+  section.step h2{
+    display:flex; align-items:center; gap:10px; margin-top:0; font-size:1.15rem;
+  }
+  .badge{
+    background:var(--accent); color:#ffffff; font-weight:700; font-size:0.75rem;
+    padding:3px 10px; border-radius:20px; white-space:nowrap;
+  }
+  .time{color:var(--muted); font-size:0.8rem; font-weight:400;}
+
+  .split{display:grid; grid-template-columns:1fr; gap:14px;}
+  @media(min-width:640px){ .split{grid-template-columns:1fr 1fr;} }
+  .box{
+    background:var(--card2); border-radius:12px; padding:16px 18px; border:1px solid var(--border);
+  }
+  .box h3{margin:0 0 8px; font-size:0.95rem; color:var(--accent);}
+  .box.eli5 h3{color:var(--accent2);}
+
+  .formula{
+    background:var(--card2); border:1px solid var(--border); border-radius:12px;
+    padding:16px 18px; font-size:1.05rem; text-align:center; margin:10px 0;
+    overflow-x:auto;
+  }
+  .formula .small{font-size:0.85rem; color:var(--muted); display:block; margin-top:6px;}
+
+  button.reveal, button.check, button.step-btn{
+    background:var(--accent); color:#ffffff; border:none; padding:9px 16px;
+    border-radius:8px; font-weight:600; cursor:pointer; font-size:0.85rem;
+    margin:6px 6px 0 0;
+  }
+  button.reveal:hover, button.check:hover, button.step-btn:hover{opacity:0.85;}
+  .hidden{display:none;}
+  .answer-box{
+    margin-top:10px; background:var(--card2); border-left:3px solid var(--good);
+    padding:12px 14px; border-radius:8px; font-size:0.92rem;
+  }
+
+  svg{max-width:100%; height:auto; display:block; margin:0 auto;}
+
+  ol.method li, ul.checklist li{margin-bottom:8px;}
+  .checklist li::marker{color:var(--good);}
+
+  .quiz-q{margin-bottom:20px; padding-bottom:16px; border-bottom:1px dashed var(--border);}
+  .quiz-q:last-child{border-bottom:none;}
+  .quiz-q p.q{font-weight:600; margin-bottom:8px;}
+  .quiz-options button{
+    display:block; width:100%; text-align:left; background:var(--card2);
+    color:var(--text); border:1px solid var(--border); padding:9px 12px;
+    border-radius:8px; margin-bottom:6px; cursor:pointer; font-size:0.9rem;
+  }
+  .quiz-options button:hover{border-color:var(--accent);}
+  .quiz-options button.correct{background:#e3f7ec; border-color:var(--good); color:#1b6b43;}
+  .quiz-options button.wrong{background:#fdecec; border-color:#d9534f; color:#a83232;}
+
+  .example-step{
+    background:var(--card2); border:1px solid var(--border); border-radius:10px;
+    padding:12px 16px; margin-bottom:8px; cursor:pointer;
+  }
+  .example-step .head{font-weight:600; display:flex; justify-content:space-between;}
+  .example-step .body{display:none; margin-top:8px; color:var(--muted); font-size:0.92rem;}
+  .example-step.open .body{display:block;}
+  .example-step .head::after{content:"+"; color:var(--accent);}
+  .example-step.open .head::after{content:"–";}
+
+  table{width:100%; border-collapse:collapse; font-size:0.85rem; margin-top:8px;}
+  th, td{border:1px solid var(--border); padding:6px 8px; text-align:left;}
+  th{background:var(--card2); color:var(--accent);}
+
+  .footer-note{text-align:center; color:var(--muted); font-size:0.8rem; margin-top:30px;}
+  strong.hl{color:var(--good);}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Gauss's Divergence Theorem</h1>
+  <p>Your 30-minute pre-exam run-through — click through each step in order</p>
+  <div class="progress-track" id="progressTrack"></div>
+  <div class="progress-label" id="progressLabel">0 / 6 sections done · click a step below, then tap the dot when you've got it</div>
+</header>
+
+<main>
+
+  <!-- STEP 1 -->
+  <section class="step" id="step1" data-idx="0">
+    <h2><span class="badge">1</span> The Big Idea <span class="time">~5 min</span></h2>
+    <div class="split">
+      <div class="box">
+        <h3>As it actually is (exam version)</h3>
+        <p>Let <strong>S</strong> be a closed surface enclosing a volume <strong>V</strong>. If <strong>F̄</strong> is a continuously differentiable vector point function, then:</p>
+        <p>The total <strong>flux</strong> of F̄ leaving through the closed surface S equals the total <strong>divergence</strong> (outflow-per-point) added up over the entire volume V inside.</p>
+        <p>In short: <strong class="hl">what leaks out through the skin = what's being generated inside.</strong></p>
+      </div>
+      <div class="box eli5">
+        <h3>Like you're 5</h3>
+        <p>Imagine a <strong>closed room full of kids blowing up balloons</strong> and letting them go — puff! — into the air.</p>
+        <p>You could chase down every single puff of air inside the room and add them up. Or, you could just stand at the door and windows and count <strong>all the air breezing past you on its way out</strong>.</p>
+        <p>Both counts give the exact same number. Puffs made inside = air that escapes outside.</p>
+      </div>
+    </div>
+    <button class="check" onclick="markDone(0)">✓ Got it, mark done</button>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="step" id="step2" data-idx="1">
+    <h2><span class="badge">2</span> The Formula <span class="time">~5 min</span></h2>
+    <div class="formula">
+      ∫∫∫<sub>V</sub> div F̄ dV &nbsp;=&nbsp; ∫∫<sub>S</sub> F̄ · n̂ dS
+      <span class="small">(also written ∭<sub>V</sub> ∇·F̄ dV = ∬<sub>S</sub> F̄·dS̄)</span>
+    </div>
+    <p><strong>n̂</strong> = the <strong>outward-drawn unit normal</strong> at any point of S. This is the detail students lose marks on — it must point <em>away</em> from the solid, always.</p>
+    <div class="box">
+      <h3>Cartesian form (what you'll actually compute with)</h3>
+      <p>Let F̄ = f₁ î + f₂ ĵ + f₃ k̂ and n̂ = cos α î + cos β ĵ + cos γ k̂ (direction cosines of n̂). Then:</p>
+      <div class="formula" style="font-size:0.95rem;">
+        ∭<sub>V</sub> ( ∂f₁/∂x + ∂f₂/∂y + ∂f₃/∂z ) dx dy dz &nbsp;=&nbsp; ∬<sub>S</sub> f₁ dy dz + f₂ dz dx + f₃ dx dy
+      </div>
+      <p>The left side is called <strong>div F̄</strong> or <strong>∇·F̄</strong>. It's just three partial derivatives added together — that's it.</p>
+    </div>
+    <button class="check" onclick="markDone(1)">✓ Got it, mark done</button>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="step" id="step3" data-idx="2">
+    <h2><span class="badge">3</span> Why It's True — Picture It <span class="time">~5 min</span></h2>
+    <div class="split">
+      <div>
+        <svg viewBox="0 0 300 260">
+          <rect x="60" y="40" width="180" height="180" rx="10" fill="none" stroke="#4c63d2" stroke-width="2"/>
+          <g stroke="#2f9e64" stroke-width="2" marker-end="url(#arrow)">
+            <line x1="120" y1="90" x2="95" y2="65"/>
+            <line x1="160" y1="80" x2="160" y2="45"/>
+            <line x1="200" y1="90" x2="225" y2="65"/>
+            <line x1="90" y1="130" x2="55" y2="130"/>
+            <line x1="230" y1="130" x2="265" y2="130"/>
+            <line x1="120" y1="170" x2="95" y2="195"/>
+            <line x1="160" y1="180" x2="160" y2="215"/>
+            <line x1="200" y1="170" x2="225" y2="195"/>
+          </g>
+          <circle cx="110" cy="110" r="4" fill="#e0703a"/>
+          <circle cx="160" cy="130" r="4" fill="#e0703a"/>
+          <circle cx="190" cy="150" r="4" fill="#e0703a"/>
+          <circle cx="140" cy="160" r="4" fill="#e0703a"/>
+          <defs>
+            <marker id="arrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 Z" fill="#2f9e64"/>
+            </marker>
+          </defs>
+          <text x="150" y="245" fill="#666c94" font-size="12" text-anchor="middle">orange dots = balloon puffs made inside · green arrows = air escaping through S</text>
+        </svg>
+      </div>
+      <div class="box">
+        <h3>The trick behind the proof</h3>
+        <p>Chop volume V into tiny cubes. Each tiny cube leaks a bit of flux out of its 6 faces.</p>
+        <p>When two tiny cubes sit side by side, the flux leaving one face exactly cancels the flux entering its neighbor's matching face (equal and opposite) — so all the <em>internal</em> faces cancel out.</p>
+        <p>Only the outer faces — the ones on the boundary S — survive. So: <strong class="hl">sum of tiny outflows (divergence, everywhere inside) = flux through only the outside skin.</strong></p>
+      </div>
+    </div>
+    <button class="check" onclick="markDone(2)">✓ Got it, mark done</button>
+  </section>
+
+  <!-- STEP 4 -->
+  <section class="step" id="step4" data-idx="3">
+    <h2><span class="badge">4</span> The Method You'll Actually Use <span class="time">~5 min</span></h2>
+    <p>Every "verify the theorem" question follows the same recipe:</p>
+    <ol class="method">
+      <li><strong>RHS side (easy side):</strong> compute div F̄ = ∂f₁/∂x + ∂f₂/∂y + ∂f₃/∂z, then triple-integrate it over the solid's limits.</li>
+      <li><strong>LHS side (longer side):</strong> break the closed surface into its flat/curved faces. For each face: find n̂ (outward), compute F̄·n̂, substitute the face's fixed coordinate, then integrate over that face's 2D region.</li>
+      <li><strong>Add up all the faces</strong> — this total must equal the RHS number.</li>
+      <li>State: "∴ LHS = RHS ⇒ Gauss's divergence theorem is verified."</li>
+    </ol>
+    <div class="box">
+      <h3>Cheat table: common faces &amp; their outward n̂</h3>
+      <table>
+        <tr><th>Face equation</th><th>Outward n̂</th></tr>
+        <tr><td>x = a (far face)</td><td>î</td></tr>
+        <tr><td>x = 0 (near face)</td><td>−î</td></tr>
+        <tr><td>y = a</td><td>ĵ</td></tr>
+        <tr><td>y = 0</td><td>−ĵ</td></tr>
+        <tr><td>z = a</td><td>k̂</td></tr>
+        <tr><td>z = 0</td><td>−k̂</td></tr>
+        <tr><td>sphere/cylinder x²+y²+z²=a² (or similar φ=0)</td><td>n̂ = ∇φ / |∇φ|</td></tr>
+      </table>
+    </div>
+    <button class="check" onclick="markDone(3)">✓ Got it, mark done</button>
+  </section>
+
+  <!-- STEP 5 -->
+  <section class="step" id="step5" data-idx="4">
+    <h2><span class="badge">5</span> Full Worked Example — the Cube <span class="time">~7 min</span></h2>
+    <p>Verify Gauss's theorem for F̄ = (x³ − yz) î − 2x²y ĵ + z k̂ over the cube 0 ≤ x,y,z ≤ a. (Click each row to expand.)</p>
+
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 1 · RHS — div F̄</div>
+      <div class="body">
+        div F̄ = ∂/∂x(x³−yz) + ∂/∂y(−2x²y) + ∂/∂z(z) = 3x² − 2x² + 1 = <strong class="hl">x² + 1</strong>
+      </div>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 2 · RHS — triple integral</div>
+      <div class="body">
+        ∭(x²+1) dx dy dz over 0→a each = a·a·[x³/3 + x]₀ᵃ = a² · (a³/3 + a) = <strong class="hl">a⁵/3 + a³</strong>
+      </div>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 3 · LHS — six faces</div>
+      <div class="body">
+        Face x=a: ∬(a³−yz)dydz = a⁵ − a⁴/4<br>
+        Face x=0: ∬yz dydz = a⁴/4<br>
+        Face y=a: ∬−2x²a dxdz = −2a⁵/3<br>
+        Face y=0: 0<br>
+        Face z=a: ∬a dxdy = a³<br>
+        Face z=0: 0
+      </div>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 4 · Add the six faces</div>
+      <div class="body">
+        (a⁵ − a⁴/4) + a⁴/4 + (−2a⁵/3) + 0 + a³ + 0 = a⁵ − 2a⁵/3 + a³ = <strong class="hl">a⁵/3 + a³</strong>
+      </div>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 5 · Conclusion</div>
+      <div class="body">
+        LHS = a⁵/3 + a³ = RHS ⇒ <strong class="hl">Gauss's divergence theorem is verified.</strong> This exact cube setup is the most common exam question — memorize the flow, not just the numbers.
+      </div>
+    </div>
+    <button class="check" onclick="markDone(4)">✓ Got it, mark done</button>
+  </section>
+
+  <!-- STEP 6 -->
+  <section class="step" id="step6" data-idx="5">
+    <h2><span class="badge">6</span> Quick Second Pattern — the Sphere <span class="time">~3 min</span></h2>
+    <p>Compute ∬(ax² + by² + cz²) dS over the sphere x²+y²+z² = 1.</p>
+    <div class="box">
+      <p>Trick: write it as F̄·n̂ where F̄ = ax î + by ĵ + cz k̂ (since n̂ = x î + y ĵ + z k̂ on the unit sphere).</p>
+      <p>div F̄ = a + b + c → constant, so the integral is just (a+b+c) × Volume of sphere = (a+b+c) × 4π/3.</p>
+      <p><strong class="hl">Answer: 4π(a+b+c)/3</strong> — no messy surface splitting needed when n̂ ∝ position vector, like a sphere centered at the origin.</p>
+    </div>
+    <button class="check" onclick="markDone(5)">✓ Got it, mark done</button>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="step" id="quiz">
+    <h2>🎯 60-Second Self-Test</h2>
+    <p style="color:var(--muted);">If you can answer these without scrolling up, you're ready.</p>
+
+    <div class="quiz-q">
+      <p class="q">1. What does n̂ have to be in Gauss's theorem?</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,false)">Any unit vector on S</button>
+        <button onclick="answer(this,true)">The outward-drawn unit normal to S</button>
+        <button onclick="answer(this,false)">The tangent vector to S</button>
+      </div>
+    </div>
+
+    <div class="quiz-q">
+      <p class="q">2. div F̄ for F̄ = f₁î + f₂ĵ + f₃k̂ is:</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,false)">f₁ + f₂ + f₃</button>
+        <button onclick="answer(this,true)">∂f₁/∂x + ∂f₂/∂y + ∂f₃/∂z</button>
+        <button onclick="answer(this,false)">∂f₃/∂x + ∂f₂/∂y + ∂f₁/∂z</button>
+      </div>
+    </div>
+
+    <div class="quiz-q">
+      <p class="q">3. For the face x = 0 of a cube (the "near" face), the outward normal is:</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,false)">î</button>
+        <button onclick="answer(this,true)">−î</button>
+        <button onclick="answer(this,false)">ĵ</button>
+      </div>
+    </div>
+
+    <div class="quiz-q">
+      <p class="q">4. In plain words, Gauss's divergence theorem says:</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,true)">total flux out of a closed surface = total divergence summed inside the volume</button>
+        <button onclick="answer(this,false)">the surface area equals the enclosed volume</button>
+        <button onclick="answer(this,false)">flux depends only on the surface's largest face</button>
+      </div>
+    </div>
+
+    <div class="quiz-q">
+      <p class="q">5. Why does the "chop into tiny cubes" proof work?</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,false)">Because all faces point the same direction</button>
+        <button onclick="answer(this,true)">Because shared internal faces cancel, leaving only the outer boundary</button>
+        <button onclick="answer(this,false)">Because divergence is always zero inside</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <h2>📋 Exam-Day Checklist</h2>
+    <ul class="checklist">
+      <li>Write both forms first: vector form and Cartesian form — free marks.</li>
+      <li>State clearly which is RHS (triple integral of div F̄) and which is LHS (surface integral) before you start — examiners look for this structure.</li>
+      <li>For a box/cube: 6 faces, use the cheat table above for n̂ on each.</li>
+      <li>For a sphere/cylinder: use φ = (equation) − constant = 0, then n̂ = ∇φ / |∇φ|.</li>
+      <li>Faces where F̄·n̂ = 0 after substitution contribute <strong>0</strong> — don't skip stating this, it's often 2 of the 6 faces and saves you time.</li>
+      <li>End every problem with the sentence: "∴ LHS = RHS ⇒ Gauss's divergence theorem is verified."</li>
+    </ul>
+  </section>
+
+  <p class="footer-note">Built from your own notes — cube, sphere &amp; cylinder examples included. Good luck! 🍀</p>
+</main>
+
+<script>
+  const total = 6;
+  const track = document.getElementById('progressTrack');
+  const done = new Array(total).fill(false);
+  for(let i=0;i<total;i++){
+    const dot = document.createElement('div');
+    dot.className = 'progress-dot';
+    dot.onclick = () => { toggleDone(i); };
+    dot.id = 'dot'+i;
+    track.appendChild(dot);
+  }
+  function updateLabel(){
+    const count = done.filter(Boolean).length;
+    document.getElementById('progressLabel').textContent = count + ' / ' + total + ' sections done · click a step below, then tap the dot when you\'ve got it';
+  }
+  function toggleDone(i){
+    done[i] = !done[i];
+    document.getElementById('dot'+i).classList.toggle('done', done[i]);
+    updateLabel();
+  }
+  function markDone(i){
+    done[i] = true;
+    document.getElementById('dot'+i).classList.add('done');
+    updateLabel();
+    const next = document.querySelector('[data-idx="'+(i+1)+'"]');
+    if(next) next.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+  function toggleStep(el){
+    el.classList.toggle('open');
+  }
+  function answer(btn, correct){
+    const group = btn.parentElement;
+    if(group.dataset.answered) return;
+    group.dataset.answered = "1";
+    [...group.children].forEach(b=>b.disabled=true);
+    btn.classList.add(correct ? 'correct' : 'wrong');
+    if(!correct){
+      [...group.children].forEach(b=>{ if(b.onclick.toString().includes('true')) b.classList.add('correct'); });
+    }
+  }
+</script>
+
+</body>
+</html>
