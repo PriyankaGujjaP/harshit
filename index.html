@@ -743,7 +743,7 @@
       </div>
       <div class="box eli5">
         <h3>Like you're 5</h3>
-        <p>Imagine painting a curved umbrella. Instead of measuring paint on the curved fabric directly, you shine a flashlight straight down and measure the <strong>flat shadow</strong> it casts on the floor — much easier to work with, and the math fixes up the tilt for you.</p>
+        <p>Hold your hand up in the sunshine and look at its <strong>shadow on the ground</strong>. Your hand is bumpy and curved, but its shadow is flat and easy to trace. That's the whole trick — measure the easy flat shadow instead of the tricky curved thing.</p>
       </div>
     </div>
   </section>
@@ -759,8 +759,8 @@
       </div>
       <div class="box eli5">
         <h3>Like you're 5</h3>
-        <p>R is just the flat shadow on the floor. Dividing by |n̂·k̂| is the math's way of "un-tilting" the umbrella — if the umbrella is angled instead of flat, its shadow looks smaller than the real fabric, so we stretch the shadow back out to the true size before measuring.</p>
-        <p>If the umbrella is standing straight up on its edge, its shadow disappears completely (that's n̂·k̂ = 0) — so we shine the flashlight from a different direction instead.</p>
+        <p>R is just the shadow on the ground. If you tilt your hand sideways, its shadow gets smaller and skinnier than your real hand — dividing by |n̂·k̂| stretches that skinny shadow back out to the true size before measuring.</p>
+        <p>If you turn your hand so its edge faces the sun, the shadow disappears completely (that's n̂·k̂ = 0) — so you'd trace the shadow on a side wall instead.</p>
       </div>
     </div>
   </section>
@@ -770,7 +770,7 @@
     <p>Evaluate ∬<sub>S</sub> 3(x²+y²) k̂ · n̂ dS, where S is the flat disc x²+y² ≤ 1 in the plane z = 0. (This is exactly the RHS piece from the Stokes' worked example.)</p>
     <div class="box eli5" style="margin-bottom:14px;">
       <h3>Like you're 5</h3>
-      <p>The umbrella here is already flat, lying right on the floor — so the "shadow" is just the disc itself, no tilting correction needed.</p>
+      <p>Here the hand is already flat and lying right on the ground — so its shadow is just its own exact shape, no stretching needed.</p>
     </div>
     <div class="example-step" onclick="toggleStep(this)">
       <div class="head">Step 1 · Set n̂ and simplify</div>
@@ -832,7 +832,7 @@
       </div>
       <div class="box eli5">
         <h3>Like you're 5</h3>
-        <p>It's like weighing a box of sand grain by grain. If the box is a cube, you scoop in straight rows. If it's a can, you scoop in rings. If it's a ball, you scoop in onion-like shells. Same total sand, easier scooping.</p>
+        <p>It's like counting how many little blocks fill up a shape. A box: stack them in straight rows. A can: stack them in circles. A ball: stack them in layers, like peeling an orange from the outside in. Same total blocks, just an easier way to count for each shape.</p>
       </div>
     </div>
   </section>
@@ -852,7 +852,7 @@
         <h3>Like you're 5</h3>
         <p><strong>Cartesian</strong> = scooping sand in straight little cubes, like Lego bricks — good for boxes.</p>
         <p><strong>Cylindrical</strong> = scooping in ring-shaped slices, like cutting a can into coins then wedges — good for anything round around one straight axis.</p>
-        <p><strong>Spherical</strong> = scooping in onion-like layers around a center point — good for balls. The extra "r² sinθ" is just the size of each oddly-shaped onion-layer chunk, so the count comes out right.</p>
+        <p><strong>Spherical</strong> = counting in layers around a center point, like peeling an orange — good for balls. The extra "r² sinθ" just makes up for the outer peels being bigger than the inner ones, so the count comes out right.</p>
       </div>
     </div>
   </section>
@@ -862,7 +862,7 @@
     <p>Evaluate ∭<sub>V</sub> 4z dV, where V is the upper half of the ball x²+y²+z² ≤ a² (the solid sitting on the xy-plane, capped by the upper hemisphere). This is the exact volume integral that comes out of applying Gauss's theorem to F̄ = yz²î + zx²ĵ + 2z²k̂.</p>
     <div class="box eli5" style="margin-bottom:14px;">
       <h3>Like you're 5</h3>
-      <p>It's a snow-dome shape — a half-ball sitting flat-side-down. We scoop sand out in onion-shell layers (spherical coordinates) since that matches the round shape perfectly, and only go halfway up (θ stops at 90°) since it's a half-ball, not a whole one.</p>
+      <p>Picture half an orange sitting flat-side-down, like a little bowl. We count it in peeled layers from the center out (spherical coordinates) since that matches the round shape perfectly, and we only go halfway up (θ stops at 90°) since it's half an orange, not a whole one.</p>
     </div>
     <div class="example-step" onclick="toggleStep(this)">
       <div class="head">Step 1 · Switch to spherical coordinates</div>
@@ -929,7 +929,7 @@
       </div>
       <div class="box eli5">
         <h3>Like you're 5</h3>
-        <p>Mixing two paint colors together and then taking a photo of the mix is <strong>hard to describe with words</strong>. But if you photograph each paint can separately first (transform them), then mixing becomes as easy as multiplying two numbers.</p>
+        <p>Imagine two cups of juice, orange and apple. Slowly pouring them together and figuring out the exact taste at every moment is <strong>complicated</strong>. But if you just look at the number written on each cup's label and multiply those two numbers, you get the same answer — much easier.</p>
       </div>
     </div>
   </section>
@@ -946,8 +946,8 @@
       </div>
       <div class="box eli5">
         <h3>Like you're 5</h3>
-        <p>Mixing two paints and then taking one photo = taking a photo of each paint separately and multiplying the two photos. Same picture either way.</p>
-        <p>The useful trick: if someone hands you two photos already multiplied together, you can always work backwards to find the two paints that made them — no messy extra steps.</p>
+        <p>Slowly pouring two juices together and tasting the blend = looking at each juice's label number and multiplying them. Same answer either way.</p>
+        <p>The useful trick: if someone hands you two label numbers already multiplied together, you can always work backwards to find the two juices that made them — no messy extra steps.</p>
       </div>
     </div>
   </section>
@@ -957,7 +957,7 @@
     <p>Find L⁻¹{ 1 / [(s−a)(s−b)] } using the convolution theorem (a ≠ b).</p>
     <div class="box eli5" style="margin-bottom:14px;">
       <h3>Like you're 5</h3>
-      <p>1/(s−a) is the "photo" of e<sup>at</sup>, and 1/(s−b) is the "photo" of e<sup>bt</sup>. Since we're given the two photos already multiplied together, we just need to "unmix the paint" — blend e<sup>at</sup> and e<sup>bt</sup> back together using the recipe.</p>
+      <p>1/(s−a) is the label number for juice e<sup>at</sup>, and 1/(s−b) is the label number for juice e<sup>bt</sup>. Since we're given the two label numbers already multiplied together, we just work backwards to find how those two juices blend.</p>
     </div>
     <div class="example-step" onclick="toggleStep(this)">
       <div class="head">Step 1 · Identify f(t) and g(t)</div>
