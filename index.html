@@ -148,13 +148,21 @@
       <span class="small">(also written ∭<sub>V</sub> ∇·F̄ dV = ∬<sub>S</sub> F̄·dS̄)</span>
     </div>
     <p><strong>n̂</strong> = the <strong>outward-drawn unit normal</strong> at any point of S. This is the detail students lose marks on — it must point <em>away</em> from the solid, always.</p>
-    <div class="box">
-      <h3>Cartesian form (what you'll actually compute with)</h3>
-      <p>Let F̄ = f₁ î + f₂ ĵ + f₃ k̂ and n̂ = cos α î + cos β ĵ + cos γ k̂ (direction cosines of n̂). Then:</p>
-      <div class="formula" style="font-size:0.95rem;">
-        ∭<sub>V</sub> ( ∂f₁/∂x + ∂f₂/∂y + ∂f₃/∂z ) dx dy dz &nbsp;=&nbsp; ∬<sub>S</sub> f₁ dy dz + f₂ dz dx + f₃ dx dy
+    <div class="split">
+      <div class="box">
+        <h3>Cartesian form (what you'll actually compute with)</h3>
+        <p>Let F̄ = f₁ î + f₂ ĵ + f₃ k̂ and n̂ = cos α î + cos β ĵ + cos γ k̂ (direction cosines of n̂). Then:</p>
+        <div class="formula" style="font-size:0.95rem;">
+          ∭<sub>V</sub> ( ∂f₁/∂x + ∂f₂/∂y + ∂f₃/∂z ) dx dy dz &nbsp;=&nbsp; ∬<sub>S</sub> f₁ dy dz + f₂ dz dx + f₃ dx dy
+        </div>
+        <p>The left side is called <strong>div F̄</strong> or <strong>∇·F̄</strong>. It's just three partial derivatives added together — that's it.</p>
       </div>
-      <p>The left side is called <strong>div F̄</strong> or <strong>∇·F̄</strong>. It's just three partial derivatives added together — that's it.</p>
+      <div class="box eli5">
+        <h3>Like you're 5</h3>
+        <p><strong>div F̄</strong> is just: "how hard is the balloon puffing right at THIS exact spot?" You work that out for every tiny spot in the room, then add them all up — that's the left side.</p>
+        <p>The right side is the grown-up way of saying "count the air escaping through every window and door." Same total, promise.</p>
+        <p><strong>n̂</strong> is just which way you're facing when you stand at a window — always facing outward, away from the room, never inward. That way you never count the same puff of air twice.</p>
+      </div>
     </div>
     <button class="check" onclick="markDone(1)">✓ Got it, mark done</button>
   </section>
@@ -195,6 +203,12 @@
         <p>Only the outer faces — the ones on the boundary S — survive. So: <strong class="hl">sum of tiny outflows (divergence, everywhere inside) = flux through only the outside skin.</strong></p>
       </div>
     </div>
+    <div class="box eli5" style="margin-top:14px;">
+      <h3>Like you're 5</h3>
+      <p>Now imagine the balloon-room is actually built out of <strong>lots of tiny toy blocks</strong> stacked together, like Lego.</p>
+      <p>Each little block passes its puff of air to the block right next to it. Whatever one block gives away, its neighbor receives — so those two cancel out and don't matter.</p>
+      <p>The <em>only</em> puffs that don't get cancelled are the ones at the very outside edge of the whole pile, because there's no neighbor block out there to catch them. So all that's left, in the end, is exactly what escapes through the big outside wall.</p>
+    </div>
     <button class="check" onclick="markDone(2)">✓ Got it, mark done</button>
   </section>
 
@@ -208,18 +222,25 @@
       <li><strong>Add up all the faces</strong> — this total must equal the RHS number.</li>
       <li>State: "∴ LHS = RHS ⇒ Gauss's divergence theorem is verified."</li>
     </ol>
-    <div class="box">
-      <h3>Cheat table: common faces &amp; their outward n̂</h3>
-      <table>
-        <tr><th>Face equation</th><th>Outward n̂</th></tr>
-        <tr><td>x = a (far face)</td><td>î</td></tr>
-        <tr><td>x = 0 (near face)</td><td>−î</td></tr>
-        <tr><td>y = a</td><td>ĵ</td></tr>
-        <tr><td>y = 0</td><td>−ĵ</td></tr>
-        <tr><td>z = a</td><td>k̂</td></tr>
-        <tr><td>z = 0</td><td>−k̂</td></tr>
-        <tr><td>sphere/cylinder x²+y²+z²=a² (or similar φ=0)</td><td>n̂ = ∇φ / |∇φ|</td></tr>
-      </table>
+    <div class="split">
+      <div class="box">
+        <h3>Cheat table: common faces &amp; their outward n̂</h3>
+        <table>
+          <tr><th>Face equation</th><th>Outward n̂</th></tr>
+          <tr><td>x = a (far face)</td><td>î</td></tr>
+          <tr><td>x = 0 (near face)</td><td>−î</td></tr>
+          <tr><td>y = a</td><td>ĵ</td></tr>
+          <tr><td>y = 0</td><td>−ĵ</td></tr>
+          <tr><td>z = a</td><td>k̂</td></tr>
+          <tr><td>z = 0</td><td>−k̂</td></tr>
+          <tr><td>sphere/cylinder x²+y²+z²=a² (or similar φ=0)</td><td>n̂ = ∇φ / |∇φ|</td></tr>
+        </table>
+      </div>
+      <div class="box eli5">
+        <h3>Like you're 5</h3>
+        <p>Think about wrapping a present in a box. To know how much wrapping paper you used, you don't do it all at once — you check <strong>one flat side at a time</strong> (top, bottom, front, back, left, right), then add up all six pieces of paper.</p>
+        <p>That's the entire method. The "easy side" (RHS) is like weighing the whole present at once. The "six faces" (LHS) is wrapping it side by side. Both better give the same answer — that's what you're proving.</p>
+      </div>
     </div>
     <button class="check" onclick="markDone(3)">✓ Got it, mark done</button>
   </section>
@@ -228,6 +249,17 @@
   <section class="step" id="step5" data-idx="4">
     <h2><span class="badge">5</span> Full Worked Example — the Cube <span class="time">~7 min</span></h2>
     <p>Verify Gauss's theorem for F̄ = (x³ − yz) î − 2x²y ĵ + z k̂ over the cube 0 ≤ x,y,z ≤ a. (Click each row to expand.)</p>
+
+    <div class="box eli5" style="margin-bottom:14px;">
+      <h3>Like you're 5 — the same example, no scary letters</h3>
+      <p>Picture a <strong>toy cube-shaped room</strong>, like a big box, with sides of length "a". Inside, there's a magic wind machine — it doesn't blow the same everywhere, it blows harder in some corners and softer in others.</p>
+      <p>We want to check one thing: does "all the wind puffed up inside" match "all the wind leaking out through the 6 walls"?</p>
+      <p><strong>Inside check:</strong> we add up how hard the wind is puffing at every single tiny spot in the room. We get one number.</p>
+      <p><strong>Outside check:</strong> we go wall by wall — right wall, left wall, front wall, back wall, ceiling, floor — and measure how much wind leaks through each one. Two of the six walls (the left one and the back one) happen to leak <strong>exactly nothing</strong>, which saves us work. We add up all six.</p>
+      <p>Both checks land on the exact same number: <strong class="hl">a⁵/3 + a³</strong>. That's the whole trick — no matter how fancy the wind pattern looks with all those x's and y's, inside-count always equals outside-count.</p>
+    </div>
+
+    <p style="color:var(--muted); font-size:0.85rem;">Now the full working, step by step:</p>
 
     <div class="example-step" onclick="toggleStep(this)">
       <div class="head">Step 1 · RHS — div F̄</div>
@@ -271,10 +303,17 @@
   <section class="step" id="step6" data-idx="5">
     <h2><span class="badge">6</span> Quick Second Pattern — the Sphere <span class="time">~3 min</span></h2>
     <p>Compute ∬(ax² + by² + cz²) dS over the sphere x²+y²+z² = 1.</p>
-    <div class="box">
-      <p>Trick: write it as F̄·n̂ where F̄ = ax î + by ĵ + cz k̂ (since n̂ = x î + y ĵ + z k̂ on the unit sphere).</p>
-      <p>div F̄ = a + b + c → constant, so the integral is just (a+b+c) × Volume of sphere = (a+b+c) × 4π/3.</p>
-      <p><strong class="hl">Answer: 4π(a+b+c)/3</strong> — no messy surface splitting needed when n̂ ∝ position vector, like a sphere centered at the origin.</p>
+    <div class="split">
+      <div class="box">
+        <p>Trick: write it as F̄·n̂ where F̄ = ax î + by ĵ + cz k̂ (since n̂ = x î + y ĵ + z k̂ on the unit sphere).</p>
+        <p>div F̄ = a + b + c → constant, so the integral is just (a+b+c) × Volume of sphere = (a+b+c) × 4π/3.</p>
+        <p><strong class="hl">Answer: 4π(a+b+c)/3</strong> — no messy surface splitting needed when n̂ ∝ position vector, like a sphere centered at the origin.</p>
+      </div>
+      <div class="box eli5">
+        <h3>Like you're 5</h3>
+        <p>Now swap the toy cube room for a <strong>big round beach ball</strong>. This time the wind always blows straight outward, like the ball itself is slowly inflating — every spot pushes directly away from the center.</p>
+        <p>Because the wind and the wall are always facing the exact same way, you don't need to check patches one at a time like the six walls of the cube. You just take "how hard it's puffing on average" (a+b+c) and multiply by "how big the ball is inside" (4π/3). One multiplication, done.</p>
+      </div>
     </div>
     <button class="check" onclick="markDone(5)">✓ Got it, mark done</button>
   </section>
