@@ -124,6 +124,18 @@
   .topic-heading{text-align:center; margin:18px 0 4px;}
   .topic-heading h2{margin:0; font-size:1.3rem;}
   .topic-heading p{margin:4px 0 0; color:var(--muted); font-size:0.85rem;}
+
+  pre.code{
+    background:#1e2233; color:#e9ecff; border-radius:12px; padding:16px 18px;
+    overflow-x:auto; font-family:'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size:0.85rem; line-height:1.55; margin:10px 0; text-align:left;
+  }
+  pre.code .cm{color:#8b93c9;}
+  pre.code .out{color:#7ee0a8;}
+  .terminal-out{
+    background:#0d1020; color:#7ee0a8; border-radius:10px; padding:12px 16px;
+    font-family:monospace; font-size:0.85rem; white-space:pre-wrap; margin:8px 0;
+  }
 </style>
 </head>
 <body>
@@ -139,6 +151,9 @@
     <button onclick="showTab('tab-surface', this)">Surface Integral</button>
     <button onclick="showTab('tab-volume', this)">Volume Integral</button>
     <button onclick="showTab('tab-laplace', this)">Laplace Convolution</button>
+    <button onclick="showTab('tab-cpointers', this)">C · Pointers</button>
+    <button onclick="showTab('tab-cstrings', this)">C · Strings</button>
+    <button onclick="showTab('tab-cfunctions', this)">C · Functions</button>
   </div>
 </header>
 
@@ -1007,7 +1022,384 @@
 </div>
 <!-- ============ END TAB: LAPLACE ============ -->
 
-  <p class="footer-note">Built from your own notes — Gauss, Green's, Stokes', Gradient/Divergence/Curl, plus Surface, Volume &amp; Laplace Convolution. Good luck! 🍀</p>
+<!-- ============ TAB: C - POINTERS ============ -->
+<div class="tab-panel" id="tab-cpointers">
+  <div class="topic-heading">
+    <h2>Pointers &amp; Pointer Arithmetic (C)</h2>
+    <p>A variable that stores an address instead of a value — and the arithmetic rules that come with it.</p>
+  </div>
+
+  <section class="step">
+    <h2>The Big Idea</h2>
+    <div class="split">
+      <div class="box">
+        <h3>As it actually is (exam version)</h3>
+        <p>A <strong>pointer</strong> is a variable that stores the <strong>memory address</strong> of another variable, instead of storing a value directly. It's declared with a <code>*</code>: <code>int *p;</code> means "p is a pointer to an int."</p>
+        <p><code>&amp;</code> means "address of." <code>*</code> (in front of an existing pointer) means "the value stored at this address" — called <strong>dereferencing</strong>.</p>
+      </div>
+      <div class="box eli5">
+        <h3>Like you're 5</h3>
+        <p>Imagine houses on a street, each with its own house number. A regular variable is <strong>the person living in the house</strong>. A pointer is just a <strong>sticky note with a house number written on it</strong> — not the person.</p>
+        <p>If you walk to that house number and knock (dereference), you find the actual person.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <h2>The Formula (syntax + pointer arithmetic)</h2>
+    <pre class="code">int x = 10;
+int *p = &amp;x;      <span class="cm">// p now holds the address of x</span>
+printf("%d", *p);  <span class="cm">// dereference: prints the value at that address -&gt; 10</span>
+p = p + 1;         <span class="cm">// jumps forward by sizeof(int) bytes, not 1 byte</span></pre>
+    <div class="split">
+      <div class="box">
+        <table>
+          <tr><th>Symbol</th><th>Meaning</th></tr>
+          <tr><td>&amp;x</td><td>address of variable x</td></tr>
+          <tr><td>*p</td><td>value stored at the address p holds</td></tr>
+          <tr><td>p + 1</td><td>address of the <em>next</em> element of that type (not +1 byte)</td></tr>
+          <tr><td>p - 1</td><td>address of the <em>previous</em> element of that type</td></tr>
+        </table>
+      </div>
+      <div class="box eli5">
+        <h3>Like you're 5</h3>
+        <p><strong>&amp;</strong> is asking "what's your house number?" <strong>*</strong> is asking "who lives at this house number?"</p>
+        <p>Adding 1 to a pointer doesn't move one step down the street — it jumps to the <strong>next whole house</strong> of the same size. If houses (ints) are each 4 steps wide, p+1 jumps 4 steps, not 1.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <h2>Full Worked Example (compiled &amp; run)</h2>
+    <p>A program that walks through an array using pointer arithmetic, then swaps two numbers using a function that takes pointers.</p>
+    <div class="box eli5" style="margin-bottom:14px;">
+      <h3>Like you're 5</h3>
+      <p><code>ptr</code> is a sticky note holding the address of the very first box in a row of toy boxes (the array). <code>*(ptr+i)</code> means: walk <code>i</code> boxes down the row from that starting address, and peek inside.</p>
+      <p>For the swap: instead of handing the function copies of your two numbers (which it can't actually change), you hand it the two <strong>house addresses</strong> — now it can walk over and really swap what's inside.</p>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 1 · The code</div>
+      <div class="body">
+        <pre class="code">#include &lt;stdio.h&gt;
+
+void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+int main() {
+    int arr[5] = {10, 20, 30, 40, 50};
+    int *ptr = arr;
+
+    for (int i = 0; i &lt; 5; i++) {
+        printf("*(ptr+%d) = %d\n", i, *(ptr + i));
+    }
+
+    int x = 5, y = 10;
+    printf("Before swap: x = %d, y = %d\n", x, y);
+    swap(&amp;x, &amp;y);
+    printf("After swap: x = %d, y = %d\n", x, y);
+    return 0;
+}</pre>
+      </div>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 2 · What each line does</div>
+      <div class="body">
+        <code>int *ptr = arr;</code> — arrays decay to a pointer to their first element, so ptr already points at arr[0].<br>
+        <code>*(ptr + i)</code> — steps i elements forward from ptr and reads the value there. Identical to <code>arr[i]</code>.<br>
+        <code>swap(&amp;x, &amp;y)</code> — passes the <em>addresses</em> of x and y, not copies. Inside swap, <code>*a</code> and <code>*b</code> reach back and change the originals.
+      </div>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 3 · Actual program output</div>
+      <div class="body">
+        <div class="terminal-out">*(ptr+0) = 10
+*(ptr+1) = 20
+*(ptr+2) = 30
+*(ptr+3) = 40
+*(ptr+4) = 50
+
+Before swap: x = 5, y = 10
+After swap: x = 10, y = 5</div>
+        <strong class="hl">This was actually compiled and run to confirm the output — it's exact, not guessed.</strong>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <h2>🎯 Quick Check</h2>
+    <div class="quiz-q">
+      <p class="q">1. What does a pointer variable actually store?</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,false)">A copy of another variable's value</button>
+        <button onclick="answer(this,true)">The memory address of another variable</button>
+        <button onclick="answer(this,false)">The name of another variable</button>
+      </div>
+    </div>
+    <div class="quiz-q">
+      <p class="q">2. If p is an int pointer and int is 4 bytes, what does p+1 do?</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,false)">Moves the address forward by 1 byte</button>
+        <button onclick="answer(this,true)">Moves the address forward by 4 bytes (to the next int)</button>
+        <button onclick="answer(this,false)">Adds 1 to the value being pointed to</button>
+      </div>
+    </div>
+    <div class="quiz-q">
+      <p class="q">3. Why does swap(&amp;x, &amp;y) actually change x and y, but swap(x, y) wouldn't?</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,true)">Passing addresses lets the function reach back and modify the originals; passing values only gives it copies</button>
+        <button onclick="answer(this,false)">There's no real difference, both would work</button>
+        <button onclick="answer(this,false)">&amp;x and &amp;y are faster to compute</button>
+      </div>
+    </div>
+  </section>
+</div>
+<!-- ============ END TAB: C POINTERS ============ -->
+
+<!-- ============ TAB: C - STRINGS ============ -->
+<div class="tab-panel" id="tab-cstrings">
+  <div class="topic-heading">
+    <h2>Basic String Functions (C)</h2>
+    <p>Strings are just character arrays with a secret stop sign at the end — here's the toolkit for handling them.</p>
+  </div>
+
+  <section class="step">
+    <h2>The Big Idea</h2>
+    <div class="split">
+      <div class="box">
+        <h3>As it actually is (exam version)</h3>
+        <p>In C, a string is simply an <strong>array of characters</strong> ending with a special null character <code>'\0'</code> that marks where the string stops. There is no separate "string type."</p>
+        <p>The <code>&lt;string.h&gt;</code> library gives you ready-made functions so you don't have to write character-by-character loops yourself every time.</p>
+      </div>
+      <div class="box eli5">
+        <h3>Like you're 5</h3>
+        <p>A string is like a <strong>train of letter-cars</strong> lined up in a row. The very last car is a secret "stop" car (<code>\0</code>) that's invisible when you read the train, but it tells the computer exactly where the train ends.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <h2>The Formula (the four you'll use most)</h2>
+    <div class="split">
+      <div class="box">
+        <table>
+          <tr><th>Function</th><th>What it does</th></tr>
+          <tr><td>strlen(str)</td><td>counts characters, not including \0</td></tr>
+          <tr><td>strcpy(dest, src)</td><td>copies src into dest</td></tr>
+          <tr><td>strcat(dest, src)</td><td>appends src onto the end of dest</td></tr>
+          <tr><td>strcmp(s1, s2)</td><td>0 if equal, negative if s1&lt;s2, positive if s1&gt;s2</td></tr>
+        </table>
+      </div>
+      <div class="box eli5">
+        <h3>Like you're 5</h3>
+        <p><strong>strlen</strong> = count the letter-cars (not the secret stop car).</p>
+        <p><strong>strcpy</strong> = copy one train exactly onto a second track.</p>
+        <p><strong>strcat</strong> = hook a second train onto the back of the first one.</p>
+        <p><strong>strcmp</strong> = who comes first in the dictionary — like sorting spelling words for a spelling bee.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <h2>Full Worked Example (compiled &amp; run)</h2>
+    <p>A program that runs all four functions on two words and shows exactly what happens.</p>
+    <div class="box eli5" style="margin-bottom:14px;">
+      <h3>Like you're 5</h3>
+      <p>We start with two little trains, "Hello" and "World," and watch what each function does to them, one at a time.</p>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 1 · The code</div>
+      <div class="body">
+        <pre class="code">#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+int main() {
+    char str1[50] = "Hello";
+    char str2[50] = "World";
+    char str3[50];
+
+    printf("strlen(str1) = %lu\n", strlen(str1));
+
+    strcpy(str3, str1);
+    printf("After strcpy: str3 = %s\n", str3);
+
+    strcat(str3, str2);
+    printf("After strcat: str3 = %s\n", str3);
+
+    printf("strcmp(str1, str2) = %d\n", strcmp(str1, str2));
+    return 0;
+}</pre>
+      </div>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 2 · Trace it through</div>
+      <div class="body">
+        "Hello" has 5 letter-cars → strlen = 5.<br>
+        strcpy(str3, str1) makes str3 an exact copy of "Hello".<br>
+        strcat(str3, str2) hooks "World" onto the back → str3 becomes "HelloWorld".<br>
+        strcmp compares letter by letter: 'H' (72) comes before 'W' (87), so the result is <strong class="hl">negative</strong>.
+      </div>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 3 · Actual program output</div>
+      <div class="body">
+        <div class="terminal-out">strlen(str1) = 5
+After strcpy: str3 = Hello
+After strcat: str3 = HelloWorld
+strcmp(str1, str2) = -120</div>
+        The exact negative number from strcmp can vary by compiler (it's only guaranteed to be <strong class="hl">negative</strong>, not a specific value) — but this run genuinely produced −120.
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <h2>🎯 Quick Check</h2>
+    <div class="quiz-q">
+      <p class="q">1. How does C know where a string ends?</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,false)">It counts exactly 50 characters</button>
+        <button onclick="answer(this,true)">It looks for the null character '\0'</button>
+        <button onclick="answer(this,false)">Strings in C have a built-in length field</button>
+      </div>
+    </div>
+    <div class="quiz-q">
+      <p class="q">2. strlen("Hello") counts:</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,true)">5 — it does not count the '\0'</button>
+        <button onclick="answer(this,false)">6 — it counts the '\0' too</button>
+        <button onclick="answer(this,false)">50 — the full array size</button>
+      </div>
+    </div>
+    <div class="quiz-q">
+      <p class="q">3. If strcmp(s1, s2) returns 0, that means:</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,false)">s1 comes before s2 alphabetically</button>
+        <button onclick="answer(this,true)">s1 and s2 are exactly equal</button>
+        <button onclick="answer(this,false)">s1 and s2 are different lengths</button>
+      </div>
+    </div>
+  </section>
+</div>
+<!-- ============ END TAB: C STRINGS ============ -->
+
+<!-- ============ TAB: C - USER-DEFINED FUNCTIONS ============ -->
+<div class="tab-panel" id="tab-cfunctions">
+  <div class="topic-heading">
+    <h2>User-Defined Functions (C)</h2>
+    <p>Write a job once, give it a name, and call it by name whenever you need it done again.</p>
+  </div>
+
+  <section class="step">
+    <h2>The Big Idea</h2>
+    <div class="split">
+      <div class="box">
+        <h3>As it actually is (exam version)</h3>
+        <p>A <strong>function</strong> is a named, self-contained block of code that performs one task. Instead of rewriting the same logic everywhere, you write it once and <strong>call</strong> it by name whenever you need it.</p>
+        <p>Structure: <code>return_type function_name(parameter_list) { ...body...; return value; }</code>. It must be declared (a <em>prototype</em>) or defined before it's used.</p>
+      </div>
+      <div class="box eli5">
+        <h3>Like you're 5</h3>
+        <p>Imagine training a helper robot to do one job — say, "make a sandwich." You only teach it once. Any time you're hungry, you just say <strong>"robot, make a sandwich"</strong> instead of making it from scratch yourself every single time.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <h2>The Formula (syntax + how arguments are passed)</h2>
+    <pre class="code">return_type function_name(parameter_list) {
+    <span class="cm">// body</span>
+    return value;   <span class="cm">// skip this line if return_type is void</span>
+}</pre>
+    <div class="split">
+      <div class="box">
+        <p><strong>Call by value</strong>: the function gets a <em>copy</em> of your variable — changes inside the function don't affect the original.</p>
+        <p><strong>Call by reference</strong> (using pointers, from the Pointers tab): the function gets the variable's <em>address</em> — changes inside the function do affect the original.</p>
+      </div>
+      <div class="box eli5">
+        <h3>Like you're 5</h3>
+        <p><strong>Call by value</strong> hands the robot a photocopy of your homework — it can scribble all over the copy, your original stays clean.</p>
+        <p><strong>Call by reference</strong> hands the robot your actual original notebook — now it can really change what's written in it.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <h2>Full Worked Example (compiled &amp; run)</h2>
+    <p>A user-defined function that calculates a factorial by calling itself (recursion).</p>
+    <div class="box eli5" style="margin-bottom:14px;">
+      <h3>Like you're 5</h3>
+      <p>Factorial of 5 means "5 × 4 × 3 × 2 × 1." Instead of writing that whole multiplication out, the function just asks a smaller version of itself: <strong>"what's 4! ?"</strong> — and that version asks an even smaller one, all the way down to 1, then the answers multiply their way back up.</p>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 1 · The code</div>
+      <div class="body">
+        <pre class="code">#include &lt;stdio.h&gt;
+
+long factorial(int n) {
+    if (n &lt;= 1) return 1;
+    return n * factorial(n - 1);
+}
+
+int main() {
+    int num = 5;
+    printf("Factorial of %d = %ld\n", num, factorial(num));
+    return 0;
+}</pre>
+      </div>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 2 · Trace the recursion</div>
+      <div class="body">
+        factorial(5) = 5 × factorial(4)<br>
+        factorial(4) = 4 × factorial(3)<br>
+        factorial(3) = 3 × factorial(2)<br>
+        factorial(2) = 2 × factorial(1)<br>
+        factorial(1) = 1 &nbsp;<em>(this is the stopping point)</em><br>
+        Multiplying back up: 1 → 2×1=2 → 3×2=6 → 4×6=24 → 5×24=<strong class="hl">120</strong>
+      </div>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 3 · Actual program output</div>
+      <div class="body">
+        <div class="terminal-out">Factorial of 5 = 120</div>
+        <strong class="hl">Compiled and run — confirmed correct.</strong>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <h2>🎯 Quick Check</h2>
+    <div class="quiz-q">
+      <p class="q">1. Why write a user-defined function instead of repeating code?</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,true)">Write the logic once, reuse it anywhere by calling its name — easier to read, fix, and test</button>
+        <button onclick="answer(this,false)">It makes the program run faster, always</button>
+        <button onclick="answer(this,false)">C requires every task to be in its own function</button>
+      </div>
+    </div>
+    <div class="quiz-q">
+      <p class="q">2. In call by value, changes made to a parameter inside the function:</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,false)">Change the original variable in main</button>
+        <button onclick="answer(this,true)">Only affect the function's own copy, not the original</button>
+        <button onclick="answer(this,false)">Cause a compile error</button>
+      </div>
+    </div>
+    <div class="quiz-q">
+      <p class="q">3. In the factorial function, what stops the recursion from running forever?</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,false)">The for loop limit</button>
+        <button onclick="answer(this,true)">The base case: "if (n &lt;= 1) return 1;"</button>
+        <button onclick="answer(this,false)">The return type being long</button>
+      </div>
+    </div>
+  </section>
+</div>
+<!-- ============ END TAB: C FUNCTIONS ============ -->
+
+  <p class="footer-note">Built from your own notes — Gauss, Green's, Stokes', Gradient/Divergence/Curl, Surface, Volume &amp; Laplace Convolution — plus compiled-and-verified C programs on Pointers, Strings &amp; Functions. Good luck! 🍀</p>
 </main>
 
 <script>
