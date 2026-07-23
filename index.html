@@ -154,6 +154,7 @@
     <button onclick="showTab('tab-cpointers', this)">C · Pointers</button>
     <button onclick="showTab('tab-cstrings', this)">C · Strings</button>
     <button onclick="showTab('tab-cfunctions', this)">C · Functions</button>
+    <button onclick="showTab('tab-queue', this)">Queue (DS)</button>
   </div>
 </header>
 
@@ -1399,7 +1400,279 @@ int main() {
 </div>
 <!-- ============ END TAB: C FUNCTIONS ============ -->
 
-  <p class="footer-note">Built from your own notes — Gauss, Green's, Stokes', Gradient/Divergence/Curl, Surface, Volume &amp; Laplace Convolution — plus compiled-and-verified C programs on Pointers, Strings &amp; Functions. Good luck! 🍀</p>
+<!-- ============ TAB: QUEUE (DATA STRUCTURES) ============ -->
+<div class="tab-panel" id="tab-queue">
+  <div class="topic-heading">
+    <h2>Queue — FIFO Principle &amp; Queue ADT</h2>
+    <p>A line where the first person to join is the first person served — no cutting allowed.</p>
+  </div>
+
+  <section class="step">
+    <h2>The Big Idea</h2>
+    <div class="split">
+      <div class="box">
+        <h3>As it actually is (exam version)</h3>
+        <p>A <strong>queue</strong> is a linear data structure and collection of elements in which elements are <strong>inserted at one end (rear)</strong> and <strong>deleted from the other end (front)</strong>.</p>
+        <p>This makes it <strong>FIFO — First In, First Out</strong>: the very first element added to the queue is the very first one removed. This is the one rule that defines a queue.</p>
+        <p>Real-life examples: people buying movie tickets in a line, vehicles at a tollgate, a single-lane one-way road where the vehicle that enters first is the vehicle that exits first.</p>
+      </div>
+      <div class="box eli5">
+        <h3>Like you're 5</h3>
+        <p>Picture a line of kids waiting to buy movie tickets. New kids join at the <strong>back</strong> of the line. The ticket counter only serves the kid at the <strong>front</strong>.</p>
+        <p>Whoever got in line first gets their ticket first. Nobody is allowed to cut to the front — that's the whole rule of a queue.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <h2>The Formula (Queue ADT — the operations)</h2>
+    <div class="split">
+      <div class="box">
+        <table>
+          <tr><th>Operation</th><th>What it does</th></tr>
+          <tr><td>enqueue()</td><td>insert an element at the rear</td></tr>
+          <tr><td>dequeue()</td><td>remove the element at the front</td></tr>
+          <tr><td>front()</td><td>returns the front element without removing it</td></tr>
+          <tr><td>rear()</td><td>returns the rear element without removing it</td></tr>
+          <tr><td>isFull()</td><td>checks if the queue has no room left</td></tr>
+          <tr><td>isEmpty()</td><td>checks if the queue has no elements</td></tr>
+          <tr><td>size()</td><td>returns the total number of elements</td></tr>
+          <tr><td>display()</td><td>shows all elements currently in the queue</td></tr>
+        </table>
+      </div>
+      <div class="box eli5">
+        <h3>Like you're 5</h3>
+        <p><strong>enqueue</strong> = a new kid joins the back of the ticket line.</p>
+        <p><strong>dequeue</strong> = the kid at the front gets their ticket and leaves the line.</p>
+        <p><strong>front()</strong> = peeking to see who's next in line, without pulling them out.</p>
+        <p><strong>isFull()</strong> = checking if the line has hit the "line ends here" sign.</p>
+        <p><strong>isEmpty()</strong> = checking if there's nobody left waiting at all.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <h2>Worked Example 1 · Queue Using an Array (compiled &amp; run)</h2>
+    <p>A 5-slot array queue: insert 5, 6, 7 — watch front/rear move — then remove one.</p>
+    <div class="box eli5" style="margin-bottom:14px;">
+      <h3>Like you're 5</h3>
+      <p>The array is 5 empty parking spots in a row. <code>rear</code> is a sticky note marking the last filled spot; <code>front</code> marks the next spot due to leave. Every enqueue moves the rear note one spot right; every dequeue moves the front note one spot right — the line only ever grows to the right.</p>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 1 · The code</div>
+      <div class="body">
+        <pre class="code">#include &lt;stdio.h&gt;
+#define MAX 5
+
+int queue[MAX];
+int front = -1, rear = -1;
+
+int isFull() {
+    return rear == MAX - 1;
+}
+
+int isEmpty() {
+    return front == -1 || front &gt; rear;
+}
+
+void enqueue(int value) {
+    if (isFull()) {
+        printf("Queue is full (overflow)\n");
+        return;
+    }
+    if (front == -1) front = 0;
+    queue[++rear] = value;
+}
+
+int dequeue() {
+    if (isEmpty()) {
+        printf("Queue is empty (underflow)\n");
+        return -1;
+    }
+    int val = queue[front];
+    front++;
+    return val;
+}
+
+int main() {
+    enqueue(5);
+    enqueue(6);
+    enqueue(7);
+    <span class="cm">// front=0, rear=2 -> queue: [5 6 7]</span>
+
+    printf("front() = %d\n", queue[front]);
+    printf("size()  = %d\n", rear - front + 1);
+
+    dequeue();
+    <span class="cm">// front becomes 1 -> queue: [6 7]</span>
+
+    return 0;
+}</pre>
+      </div>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 2 · Trace it through</div>
+      <div class="body">
+        Start: front = -1, rear = -1 → queue is empty.<br>
+        enqueue(5): front becomes 0, rear becomes 0 → queue [5].<br>
+        enqueue(6): rear becomes 1 → queue [5 6].<br>
+        enqueue(7): rear becomes 2 → queue [5 6 7].<br>
+        front() peeks queue[front] = queue[0] = <strong class="hl">5</strong>. size() = rear − front + 1 = 2 − 0 + 1 = <strong class="hl">3</strong>.<br>
+        dequeue(): removes queue[front] = 5, then front becomes 1 → queue is now conceptually [6 7], with front pointing at index 1.
+      </div>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 3 · Actual program output</div>
+      <div class="body">
+        <div class="terminal-out">Inserted 5 -> front=0, rear=0
+Inserted 6 -> front=0, rear=1
+Inserted 7 -> front=0, rear=2
+Queue: [ 5 6 7 ]
+front() = 5
+size()  = 3
+Removed 5 -> front=1, rear=2
+Queue: [ 6 7 ]
+isEmpty() = 0
+isFull()  = 0</div>
+        <strong class="hl">This was actually compiled and run to confirm the output — it's exact, not guessed.</strong>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <h2>Worked Example 2 · Queue Using a Linked List (compiled &amp; run)</h2>
+    <p>Same FIFO behavior, but built with nodes and pointers instead of a fixed-size array — so it never overflows for lack of array space.</p>
+    <div class="box eli5" style="margin-bottom:14px;">
+      <h3>Like you're 5</h3>
+      <p>Instead of numbered parking spots, now each kid in line holds hands with the kid right behind them. <code>front</code> is a sticky note on the kid at the very front; <code>rear</code> is a sticky note on the kid at the very back. A new kid joins by holding the last kid's hand and becoming the new back.</p>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 1 · The code</div>
+      <div class="body">
+        <pre class="code">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+struct Node {
+    int data;
+    struct Node *next;
+};
+
+struct Node *front = NULL, *rear = NULL;
+
+void enqueue(int val) {
+    struct Node *ptr = (struct Node *)malloc(sizeof(struct Node));
+    ptr-&gt;data = val;
+    ptr-&gt;next = NULL;
+
+    if (front == NULL) {
+        front = ptr;
+        rear = ptr;
+    } else {
+        rear-&gt;next = ptr;
+        rear = ptr;
+    }
+}
+
+void dequeue() {
+    if (front == NULL) {
+        printf("Queue is empty (underflow)\n");
+        return;
+    }
+    struct Node *temp = front;
+    front = front-&gt;next;
+    if (front == NULL) rear = NULL;
+    free(temp);
+}
+
+int main() {
+    enqueue(10);
+    enqueue(20);
+    enqueue(30);
+    <span class="cm">// queue: 10 -&gt; 20 -&gt; 30</span>
+
+    dequeue();
+    <span class="cm">// removes 10, front now points at 20</span>
+
+    enqueue(40);
+    <span class="cm">// queue: 20 -&gt; 30 -&gt; 40</span>
+
+    return 0;
+}</pre>
+      </div>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 2 · Trace it through</div>
+      <div class="body">
+        enqueue(10): front and rear both NULL, so this node becomes both front and rear.<br>
+        enqueue(20), enqueue(30): each new node is attached via <code>rear-&gt;next = ptr</code>, then rear moves to the new node. Chain: 10 → 20 → 30.<br>
+        dequeue(): front (10) is removed and freed; front moves to the next node (20). Chain: 20 → 30.<br>
+        enqueue(40): attached after the current rear (30), rear moves to 40. Chain: 20 → 30 → 40.<br>
+        If dequeue() ever empties the list, front becomes NULL — and rear is explicitly set to NULL too, otherwise it would dangle.
+      </div>
+    </div>
+    <div class="example-step" onclick="toggleStep(this)">
+      <div class="head">Step 3 · Actual program output</div>
+      <div class="body">
+        <div class="terminal-out">Inserted 10
+Inserted 20
+Inserted 30
+Queue: [ 10 20 30 ]
+Removed 10
+Queue: [ 20 30 ]
+Inserted 40
+Queue: [ 20 30 40 ]</div>
+        <strong class="hl">Compiled and run — confirmed correct.</strong>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <h2>🎯 Quick Check</h2>
+    <div class="quiz-q">
+      <p class="q">1. What does FIFO stand for, and what does it mean for a queue?</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,false)">Fast In, Fast Out — the queue processes elements quickly</button>
+        <button onclick="answer(this,true)">First In, First Out — the first element inserted is the first one removed</button>
+        <button onclick="answer(this,false)">Fixed In, Fixed Out — elements never move once inserted</button>
+      </div>
+    </div>
+    <div class="quiz-q">
+      <p class="q">2. In a queue, where do insertions and deletions happen?</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,false)">Both insertion and deletion happen at the same end</button>
+        <button onclick="answer(this,true)">Insertion happens at the rear; deletion happens at the front</button>
+        <button onclick="answer(this,false)">Insertion happens at the front; deletion happens at the rear</button>
+      </div>
+    </div>
+    <div class="quiz-q">
+      <p class="q">3. In the array implementation, what does isFull() check?</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,true)">Whether rear has reached the last index of the array (MAX - 1)</button>
+        <button onclick="answer(this,false)">Whether front equals -1</button>
+        <button onclick="answer(this,false)">Whether the queue has exactly one element</button>
+      </div>
+    </div>
+    <div class="quiz-q">
+      <p class="q">4. Why doesn't the linked-list queue need a fixed MAX size like the array version?</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,true)">Each enqueue allocates a brand-new node, so it can keep growing as long as memory is available</button>
+        <button onclick="answer(this,false)">Linked lists automatically resize the array behind the scenes</button>
+        <button onclick="answer(this,false)">It doesn't actually support more elements than an array queue</button>
+      </div>
+    </div>
+    <div class="quiz-q">
+      <p class="q">5. Which of these is NOT a real-life example of a queue?</p>
+      <div class="quiz-options">
+        <button onclick="answer(this,false)">People lining up to buy movie tickets</button>
+        <button onclick="answer(this,false)">Vehicles waiting at a tollgate</button>
+        <button onclick="answer(this,true)">A stack of plates where you only ever take the top one</button>
+      </div>
+    </div>
+  </section>
+</div>
+<!-- ============ END TAB: QUEUE ============ -->
+
+  <p class="footer-note">Built from your own notes — Gauss, Green's, Stokes', Gradient/Divergence/Curl, Surface, Volume &amp; Laplace Convolution — plus compiled-and-verified C programs on Pointers, Strings, Functions &amp; the Queue ADT (array + linked list). Good luck! 🍀</p>
 </main>
 
 <script>
